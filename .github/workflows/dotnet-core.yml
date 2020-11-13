@@ -1,0 +1,32 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+    branches: [ dev, master ]
+    
+env:
+  SOLUTION_PATH: "src/Trakx.Exchange.ApiClient.sln"
+  PACKAGE_NAME: Trakx.Exchange.ApiClient
+  PROJECT_PATH: "src/Trakx.Exchange.ApiClient/Trakx.Exchange.ApiClient.csproj"
+  TEST_PROJECT_PATH: "src/Trakx.Exchange.ApiClient.Tests/Trakx.Exchange.ApiClient.Tests.csproj"
+  ExchangeApiConfiguration__ApiKey: ${{secrets.EXCHANGE_API_KEY}}
+  ExchangeApiConfiguration__ApiSecret: ${{secrets.EXCHANGE_API_SECRET}}
+  
+jobs: 
+  build:
+    timeout-minutes: 3
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Install dependencies
+      run: dotnet restore ${{env.SOLUTION_PATH}}
+    - name: Build
+      run: dotnet build ${{env.SOLUTION_PATH}} --configuration Release --no-restore
+    - name: Test
+      run: dotnet test ${{env.SOLUTION_PATH}} --no-restore --logger GitHubActions --verbosity normal
