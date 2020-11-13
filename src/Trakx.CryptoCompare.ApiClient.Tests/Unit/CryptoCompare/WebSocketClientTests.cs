@@ -17,27 +17,31 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
 {
     public class WebSocketClientTests
     {
-        private readonly IApiDetailsProvider _apiDetailsProvider;
+        private readonly CryptoCompareApiConfiguration _apiConfiguration;
         private readonly IClientWebsocket _innerClient;
         private readonly IWebSocketStreamer _webSocketStreamer;
         private readonly CryptoCompareWebSocketClient _webSocketClient;
 
         public WebSocketClientTests(ITestOutputHelper output)
         {
-            _apiDetailsProvider = Substitute.For<IApiDetailsProvider>();
+            _apiConfiguration = new CryptoCompareApiConfiguration
+            {
+                WebSocketBaseUrl = "wss://hello",
+                ApiKey = "abcdefg"
+            };
             _innerClient = Substitute.For<IClientWebsocket>();
             _webSocketStreamer = Substitute.For<IWebSocketStreamer>();
             var logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger()
                 .ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
-            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, _apiDetailsProvider, _webSocketStreamer, logger);
+            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, _apiConfiguration, _webSocketStreamer, logger);
         }
 
         [Fact]
         public async Task Connect_should_take_URI_from_apiDetailsProvider()
         {
-            var expectedUri = new Uri("wss://hello/apiKey");
-            _apiDetailsProvider.WebSocketEndpoint.Returns(expectedUri);
+            var expectedUri = new Uri("wss://hello/v2?api_key=abcdefg");
+            _apiConfiguration.WebSocketEndpoint.Should().Be(expectedUri);
             await _webSocketClient.Connect();
 
             await _innerClient.Received(1).ConnectAsync(expectedUri, Arg.Any<CancellationToken>());

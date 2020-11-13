@@ -12,7 +12,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
 {
     public class CryptoCompareWebSocketClient : IAsyncDisposable, ICryptoCompareWebSocketClient, IDisposable
     {
-        private readonly IApiDetailsProvider _apiDetailsProvider;
+        private readonly CryptoCompareApiConfiguration _configuration;
         private readonly IClientWebsocket _client;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
@@ -22,11 +22,11 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         public IWebSocketStreamer WebSocketStreamer { get; }
 
         public CryptoCompareWebSocketClient(IClientWebsocket clientWebSocket,
-            IApiDetailsProvider apiDetailsProvider, 
+            CryptoCompareApiConfiguration configuration, 
             IWebSocketStreamer webSocketStreamer, 
             ILogger logger)
         {
-            _apiDetailsProvider = apiDetailsProvider;
+            _configuration = configuration;
             _client = clientWebSocket;
             WebSocketStreamer = webSocketStreamer;
             _logger = logger;
@@ -37,7 +37,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         {
             _logger.Information("Opening CryptoCompare websocket");
             if (_client.State != WebSocketState.Open) 
-                await _client.ConnectAsync(_apiDetailsProvider.WebSocketEndpoint, _cancellationTokenSource.Token).ConfigureAwait(false);
+                await _client.ConnectAsync(_configuration.WebSocketEndpoint, _cancellationTokenSource.Token).ConfigureAwait(false);
             _logger.Information("CryptoCompare websocket state {0}", State);
             await StartListening(_cancellationTokenSource.Token).ConfigureAwait(false);
         }

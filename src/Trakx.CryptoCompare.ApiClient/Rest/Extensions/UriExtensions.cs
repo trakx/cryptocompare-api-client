@@ -17,7 +17,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
         /// <param name="uri">Original request Uri</param>
         /// <param name="parameters">Collection of key-value pairs</param>
         /// <returns>Updated request Uri</returns>
-        public static Uri ApplyParameters([NotNull] this Uri uri, IDictionary<string, string> parameters)
+        public static Uri ApplyParameters([NotNull] this Uri uri, IDictionary<string, string?> parameters)
         {
             Check.NotNull(uri, nameof(uri));
 
@@ -28,7 +28,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
 
             // to prevent values being persisted across requests
             // use a temporary dictionary which combines new and existing parameters
-            IDictionary<string, string> p = new Dictionary<string, string>(parameters);
+            IDictionary<string, string?> p = new Dictionary<string, string?>(parameters);
 
             var hasQueryString = uri.OriginalString.IndexOf("?", StringComparison.Ordinal);
 
@@ -51,11 +51,11 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
                 key => key.Substring(0, key.IndexOf('=')),
                 value => value.Substring(value.IndexOf('=') + 1));
 
-            foreach (var existing in existingParameters)
+            foreach (var (k, v) in existingParameters)
             {
-                if (!p.ContainsKey(existing.Key))
+                if (!p.ContainsKey(k))
                 {
-                    p.Add(existing);
+                    p.Add(k,v);
                 }
             }
 

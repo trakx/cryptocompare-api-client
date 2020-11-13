@@ -34,7 +34,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             bool? tryConversion)
         {
             return new Uri(MinApiEndpoint, "dayAvg").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsym), tsym },
@@ -61,7 +61,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
 
             return new Uri(MinApiEndpoint, $"v2/histo{method}").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsym), tsym },
@@ -86,7 +86,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
 
             return new Uri(MinApiEndpoint, $"exchange/histo{method}").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(tsym), tsym },
                     { nameof(limit), limit.ToString() },
@@ -101,10 +101,10 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
 
         public static Uri MiningEquipments() => new Uri(SiteApiEndpoint, "miningequipment");
 
-        public static Uri News(string lang = null, long? lTs = null, string[] feeds = null, bool? sign = null)
+        public static Uri News(string? lang = null, long? lTs = null, string[]? feeds = null, bool? sign = null)
         {
             return new Uri(MinApiEndpoint, "news/").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(lang), lang },
                     { nameof(lTs), lTs?.ToString() },
@@ -129,7 +129,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotEmpty(e, nameof(e));
 
             return new Uri(MinApiEndpoint, "generateAvg").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsym), tsym },
@@ -147,7 +147,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             bool? tryConversion)
         {
             return new Uri(MinApiEndpoint, "pricehistorical").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsyms), tsyms.ToJoinedList() },
@@ -168,7 +168,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotEmpty(tsyms, nameof(tsyms));
 
             return new Uri(MinApiEndpoint, "pricemulti").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsyms), fsyms.ToJoinedList() },
                     { nameof(tsyms), tsyms.ToJoinedList() },
@@ -187,7 +187,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotEmpty(tsyms, nameof(tsyms));
 
             return new Uri(MinApiEndpoint, "pricemultifull").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsyms), fsyms.ToJoinedList() },
                     { nameof(tsyms), tsyms.ToJoinedList() },
@@ -206,7 +206,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotEmpty(tsyms, nameof(tsyms));
 
             return new Uri(MinApiEndpoint, "price").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsyms), tsyms.ToJoinedList() },
@@ -225,7 +225,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         {
             Check.NotNull(id, nameof(id));
             return new Uri(SiteApiEndpoint, "socialstats").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(id), id.ToString() }
                 });
@@ -236,7 +236,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotEmpty(tsyms, nameof(tsyms));
             Check.NotNull(fsym, nameof(fsym));
             return new Uri(MinApiEndpoint, "subs").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsyms), tsyms.ToJoinedList() }
@@ -248,7 +248,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
             Check.NotNullOrWhiteSpace(fsym, nameof(fsym));
             return new Uri(MinApiEndpoint, "top/exchanges").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(tsym), tsym },
@@ -260,7 +260,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         {
             Check.NotNullOrWhiteSpace(fsym, nameof(fsym));
             return new Uri(MinApiEndpoint, "top/pairs").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(fsym), fsym },
                     { nameof(limit), limit.ToString() }
@@ -271,7 +271,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         {
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
             return new Uri(MinApiEndpoint, "top/volumes").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(tsym), tsym },
                     { nameof(limit), limit.ToString() }
@@ -282,7 +282,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         {
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
             return new Uri(MinApiEndpoint, "top/totalvolfull").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(tsym), tsym },
                     { nameof(limit), limit?.ToString() },
@@ -295,7 +295,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         {
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
             return new Uri(MinApiEndpoint, "top/mktcapfull").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(tsym), tsym },
                     { nameof(limit), limit?.ToString() },
@@ -309,7 +309,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             Check.NotNullOrWhiteSpace(tsym, nameof(tsym));
             Check.NotNullOrWhiteSpace(fsym, nameof(fsym));
             return new Uri(MinApiEndpoint, "top/exchanges/full").ApplyParameters(
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { nameof(tsym), tsym },
                     { nameof(fsym), fsym },

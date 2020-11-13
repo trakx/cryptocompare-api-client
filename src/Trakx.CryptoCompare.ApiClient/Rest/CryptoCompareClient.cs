@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using JetBrains.Annotations;
+using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.Rest.Clients;
 using Trakx.CryptoCompare.ApiClient.Rest.Core;
 using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
@@ -14,35 +14,34 @@ namespace Trakx.CryptoCompare.ApiClient.Rest
     /// <seealso cref="T:Trakx.CryptoCompare.ApiClient.Rest.ICryptoCompareClient"/>
     public class CryptoCompareClient : ICryptoCompareClient
     {
-        private static readonly Lazy<CryptoCompareClient> Lazy =
-            new Lazy<CryptoCompareClient>(() => new CryptoCompareClient());
-
         private readonly HttpClient _httpClient;
 
         /// <summary>
         /// Initializes a new instance of the CryptoCompare.CryptoCompareClient class.
         /// </summary>
-        /// <param name="httpClientHandler">Custom HTTP client handler. Can be used to define proxy settigs</param>
-        /// <param name="apiKey">The api key from cryptocompare</param>
-        public CryptoCompareClient([NotNull] HttpClientHandler httpClientHandler, string apiKey = null)
+        /// <param name="httpClientHandler">Custom HTTP client handler. Can be used to define proxy settings.</param>
+        /// <param name="apiConfiguration">Details of the Api Client configuration.</param>
+        public CryptoCompareClient(HttpClientHandler httpClientHandler, IOptions<CryptoCompareApiConfiguration> apiConfiguration)
         {
             Check.NotNull(httpClientHandler, nameof(httpClientHandler));
             this._httpClient = new HttpClient(httpClientHandler, true);
 
-            if (!string.IsNullOrWhiteSpace(apiKey))
+            if (!string.IsNullOrWhiteSpace(apiConfiguration.Value.ApiKey))
             {
-                this.SetApiKey(apiKey);
+                this.SetApiKey(apiConfiguration.Value.ApiKey);
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the CryptoCompare.CryptoCompareClient class.
         /// </summary>
-        /// /// <param name="throttleDelayMs">Delay imposed between each queries to avoid exceeding CryptoCompare's maximum number of requests per second.</param>
-        public CryptoCompareClient(string apiKey = null, int throttleDelayMs = 0)
+        /// <param name="apiConfiguration">Details of the Api Client configuration.</param>
+        public CryptoCompareClient(IOptions<CryptoCompareApiConfiguration> apiConfiguration)
             : this(
-                throttleDelayMs <= 0 ? new HttpClientHandler() : new ThottledHttpClientHandler(throttleDelayMs),
-                apiKey)
+                apiConfiguration.Value.ThrottleDelayMs <= 0 
+                    ? new HttpClientHandler() 
+                    : new ThottledHttpClientHandler(apiConfiguration.Value.ThrottleDelayMs),
+                apiConfiguration)
         {
         }
 
@@ -51,14 +50,6 @@ namespace Trakx.CryptoCompare.ApiClient.Rest
             Check.NotNullOrWhiteSpace(apiKey, nameof(apiKey));
             this._httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Apikey", apiKey);
         }
-
-        /// <summary>
-        /// Gets a Singleton instance of CryptoCompare api client.
-        /// </summary>
-        /// <value>
-        /// The instance.
-        /// </value>
-        public static CryptoCompareClient Instance => Lazy.Value;
 
         /// <summary>
         /// Gets the client for coins related api endpoints.

@@ -18,6 +18,6 @@ namespace Trakx.CryptoCompare.ApiClient.Tests
             }
         }
 
-        public static string ApiKey => Environment.GetEnvironmentVariable("CRYPTOCOMPARE_API_KEY")!;
+        public static string ApiKey => Environment.GetEnvironmentVariable("CryptoCompareApiConfiguration__ApiKey")!;
     }
 }

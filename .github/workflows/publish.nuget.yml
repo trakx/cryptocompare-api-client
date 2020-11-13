@@ -12,12 +12,8 @@ on:
       - master
 
 env:
-  SOLUTION_PATH: "src/Trakx.Exchange.ApiClient.sln"
-  PACKAGE_NAME: Trakx.Exchange.ApiClient
-  PROJECT_PATH: "src/Trakx.Exchange.ApiClient/Trakx.Exchange.ApiClient.csproj"
-  TEST_PROJECT_PATH: "src/Trakx.Exchange.ApiClient.Tests/Trakx.Exchange.ApiClient.Tests.csproj"
-  ExchangeApiConfiguration__ApiKey: ${{secrets.EXCHANGE_API_KEY}}
-  ExchangeApiConfiguration__ApiSecret: ${{secrets.EXCHANGE_API_SECRET}}
+  SOLUTION_PATH: "src/Trakx.CryptoCompare.ApiClient.sln"
+  CryptoCompareApiConfiguration__ApiKey: ${{secrets.CRYPTOCOMPARE_API_KEY}}
 
 jobs:
   

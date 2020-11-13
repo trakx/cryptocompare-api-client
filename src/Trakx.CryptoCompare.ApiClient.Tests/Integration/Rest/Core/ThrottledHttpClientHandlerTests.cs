@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.Rest;
 using Xunit;
 
@@ -14,7 +15,9 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
             var throttleDelayMs = 200;
             var queriesCount = 5;
 
-            var client = new CryptoCompareClient(throttleDelayMs: throttleDelayMs);
+            var configuration = new CryptoCompareApiConfiguration { ApiKey = Secrets.ApiKey };
+            var options = Options.Create(configuration);
+            var client = new CryptoCompareClient(options);
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -26,7 +29,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
             stopWatch.Stop();
 
             var minExpectedElapsedTime = queriesCount * throttleDelayMs;
-            Assert.True(stopWatch.ElapsedMilliseconds > minExpectedElapsedTime, $"Elapsed time should have been greater than {minExpectedElapsedTime}ms, but was {stopWatch.ElapsedMilliseconds}ms.");
+            Assert.True(stopWatch.ElapsedMilliseconds > minExpectedElapsedTime, 
+                $"Elapsed time should have been greater than {minExpectedElapsedTime}ms, but was {stopWatch.ElapsedMilliseconds}ms.");
         }
 
     }
