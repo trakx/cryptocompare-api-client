@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Company>Trakx</Company>
         <Copyright>Copyright © 2020 Trakx</Copyright>
-        <RepositoryUrl>https://github.com/trakx/exchange-api-client</RepositoryUrl>
+        <RepositoryUrl>https://github.com/trakx/cryptocompare-api-client</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <Deterministic>true</Deterministic>
         <PlatformTarget>AnyCPU</PlatformTarget>
