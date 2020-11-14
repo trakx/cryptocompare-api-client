@@ -5,6 +5,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
 {
     public class Ticker : InboundMessageBase
     {
+#nullable disable
         internal const string TypeValue = "2";
         [JsonPropertyName("MARKET")] public string Market { get; set; }
         [JsonPropertyName("FROMSYMBOL")] public string FromSymbol { get; set; }
@@ -33,5 +34,6 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
         [JsonPropertyName("OPENHOUR")] public decimal? OpenHour { get; set; }
         [JsonPropertyName("HIGHHOUR")] public decimal? HighHour { get; set; }
         [JsonPropertyName("LOWHOUR")] public decimal? LowHour { get; set; }
+#nullable restore
     }
 }

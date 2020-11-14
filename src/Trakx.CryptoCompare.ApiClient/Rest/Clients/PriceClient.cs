@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Trakx.CryptoCompare.ApiClient.Rest.Core;
 using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
 using Trakx.CryptoCompare.ApiClient.Rest.Models.Responses;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
 {
@@ -58,7 +59,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             [NotNull] IEnumerable<string> fromSymbols,
             [NotNull] IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null)
+            string? exchangeName = null)
         {
             Check.NotEmpty(toSymbols, nameof(toSymbols));
             Check.NotEmpty(fromSymbols, nameof(fromSymbols));
@@ -71,7 +72,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         /// Get all the current trading info (price, vol, open, high, low etc) of any list of cryptocurrencies in any other currency that you need.
         /// If the crypto does not trade directly into the toSymbol requested, BTC will be used for conversion.
         /// This API also returns Display values for all the fields.
-        /// If the oposite pair trades we invert it (eg.: BTC-XMR).
+        /// If the opposite pair trades we invert it (eg.: BTC-XMR).
         /// </summary>
         /// <param name="fromSymbols">from symbols.</param>
         /// <param name="toSymbols">to symbols.</param>
@@ -86,13 +87,13 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             IEnumerable<string> fromSymbols,
             IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null)
+            string? exchangeName = null)
         {
             Check.NotEmpty(toSymbols, nameof(toSymbols));
             Check.NotEmpty(fromSymbols, nameof(fromSymbols));
 
             return await this.GetAsync<PriceMultiFullResponse>(
-                           ApiUrls.PriceMultiFull(fromSymbols, toSymbols, tryConversion, exchangeName))
+                    ApiUrls.PriceMultiFull(fromSymbols, toSymbols, tryConversion, exchangeName))
                        .ConfigureAwait(false);
         }
 

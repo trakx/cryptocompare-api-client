@@ -15,9 +15,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         }
 
         public async Task<IEnumerable<NewsEntity>> News(
-            string lang = null,
+            string? lang = null,
             long? lTs = null,
-            string[] feeds = null,
+            string[]? feeds = null,
             bool? sign = null)
         {
             return await this.GetAsync<IEnumerable<NewsEntity>>(ApiUrls.News(lang, lTs, feeds, sign)).ConfigureAwait(false);

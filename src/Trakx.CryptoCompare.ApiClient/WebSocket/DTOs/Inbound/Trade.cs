@@ -5,6 +5,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
 {
     public class Trade : InboundMessageBase
     {
+#nullable disable
         internal const string TypeValue = "0";
         [JsonPropertyName("M")] public string Market { get; set; }
         [JsonPropertyName("FSYM")] public string FromSymbol { get; set; }
@@ -16,5 +17,6 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
         [JsonPropertyName("P")] public decimal Price { get; set; }
         [JsonPropertyName("TOTAL")] public decimal Total { get; set; }
         [JsonPropertyName("RTS"), JsonConverter(typeof(ULongOrStringConverter))] public ulong RTimeStamp { get; set; }
+#nullable restore
     }
 }

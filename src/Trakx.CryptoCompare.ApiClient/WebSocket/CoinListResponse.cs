@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket
 {
+#nullable disable
     public partial class AllCoinsResponse
     {
         public string Response { get; set; }
@@ -46,4 +47,5 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
     public partial class RateLimit
     {
     }
+#nullable restore
 }

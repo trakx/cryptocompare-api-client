@@ -51,7 +51,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             string fsym,
             string tsym,
             int? limit,
-            string e,
+            string? e,
             DateTimeOffset? toTs,
             bool? allData,
             int? aggregate,
@@ -76,8 +76,8 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
 
         public static Uri ExchangeHistory(
             string method,
-            [NotNull] string tsym,
-            string e,
+            string tsym,
+            string? e,
             DateTimeOffset? toTs,
             int? limit,
             int? aggregate,
@@ -159,10 +159,10 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         }
 
         public static Uri PriceMulti(
-            [NotNull] IEnumerable<string> fsyms,
-            [NotNull] IEnumerable<string> tsyms,
+            IEnumerable<string> fsyms,
+            IEnumerable<string> tsyms,
             bool? tryConversion,
-            string e)
+            string? e)
         {
             Check.NotEmpty(fsyms, nameof(fsyms));
             Check.NotEmpty(tsyms, nameof(tsyms));
@@ -181,7 +181,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             IEnumerable<string> fsyms,
             IEnumerable<string> tsyms,
             bool? tryConversion,
-            string e)
+            string? e)
         {
             Check.NotEmpty(fsyms, nameof(fsyms));
             Check.NotEmpty(tsyms, nameof(tsyms));
@@ -197,10 +197,10 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         }
 
         public static Uri PriceSingle(
-            [NotNull] string fsym,
-            [NotNull] IEnumerable<string> tsyms,
+            string fsym,
+            IEnumerable<string> tsyms,
             bool? tryConversion,
-            string e)
+            string? e)
         {
             Check.NotNullOrWhiteSpace(fsym, nameof(fsym));
             Check.NotEmpty(tsyms, nameof(tsyms));

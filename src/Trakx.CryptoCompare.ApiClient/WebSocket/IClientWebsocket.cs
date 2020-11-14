@@ -120,7 +120,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         public WebSocketCloseStatus? CloseStatus => _client.CloseStatus;
 
         /// <inheritdoc />
-        public string CloseStatusDescription => _client.CloseStatusDescription;
+        public string? CloseStatusDescription => _client.CloseStatusDescription;
 
         /// <inheritdoc />
         public ClientWebSocketOptions Options => _client.Options;
@@ -129,7 +129,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         public WebSocketState State => _client.State;
 
         /// <inheritdoc />
-        public string SubProtocol => _client.SubProtocol;
+        public string? SubProtocol => _client.SubProtocol;
 
         /// <inheritdoc />
         public void Abort()

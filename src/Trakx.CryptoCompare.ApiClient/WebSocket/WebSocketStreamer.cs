@@ -52,37 +52,42 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             {
                 _logger.Verbose("Received WebSocketInboundMessage {0}{1}", Environment.NewLine, rawMessage);
                 var message = JsonSerializer.Deserialize<InboundMessageBase>(rawMessage);
+                if (message == default)
+                {
+                    _logger.Warning("Failed to parse message {rawMessage} as a known InboundMessageBase", rawMessage);
+                    return;
+                }
                 switch (message.Type)
                 {
                     case Trade.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Trade>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Trade>(rawMessage)!);
                         break;
                     case Ticker.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Ticker>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Ticker>(rawMessage)!);
                         break;
                     case AggregateIndex.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<AggregateIndex>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<AggregateIndex>(rawMessage)!);
                         break;
                     case Ohlc.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Ohlc>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Ohlc>(rawMessage)!);
                         break;
                     case SubscribeComplete.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage)!);
                         break;
                     case UnsubscribeComplete.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage)!);
                         break;
                     case LoadComplete.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<LoadComplete>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<LoadComplete>(rawMessage)!);
                         break;
                     case UnsubscribeAllComplete.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<SubscribeComplete>(rawMessage)!);
                         break;
                     case HeartBeat.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<HeartBeat>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<HeartBeat>(rawMessage)!);
                         break;
                     case Error.TypeValue:
-                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Error>(rawMessage));
+                        _incomingMessageSubject.OnNext(JsonSerializer.Deserialize<Error>(rawMessage)!);
                         break;
                     default:
                         return;

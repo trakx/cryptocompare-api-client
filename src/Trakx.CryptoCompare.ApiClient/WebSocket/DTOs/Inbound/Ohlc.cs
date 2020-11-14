@@ -5,6 +5,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
 {
     public class Ohlc : InboundMessageBase
     {
+#nullable disable
         public const string TypeValue = "24";
         [JsonPropertyName("MARKET")] public string Market { get; set; }
         [JsonPropertyName("FROMSYMBOL")] public string FromSymbol { get; set; }
@@ -25,5 +26,6 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
         [JsonPropertyName("MAXPRICE")] public decimal MaxPrice { get; set; }
         [JsonPropertyName("MINPRICE")] public decimal MinPrice { get; set; }
         [JsonPropertyName("LASTPRICE")] public decimal LastPrice { get; set; }
+#nullable restore
     }
 }
