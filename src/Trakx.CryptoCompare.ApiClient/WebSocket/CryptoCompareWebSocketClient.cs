@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
 
@@ -23,10 +24,10 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         public IWebSocketStreamer WebSocketStreamer { get; }
 
         public CryptoCompareWebSocketClient(IClientWebsocket clientWebSocket,
-            CryptoCompareApiConfiguration configuration, 
+            IOptions<CryptoCompareApiConfiguration> configuration, 
             IWebSocketStreamer webSocketStreamer)
         {
-            _configuration = configuration;
+            _configuration = configuration.Value;
             _client = clientWebSocket;
             WebSocketStreamer = webSocketStreamer;
             _cancellationTokenSource = new CancellationTokenSource();
