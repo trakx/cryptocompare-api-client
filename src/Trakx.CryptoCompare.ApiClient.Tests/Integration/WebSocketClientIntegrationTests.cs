@@ -28,10 +28,10 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             _output = output;
             var logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger()
                 .ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
-            var streamer = new WebSocketStreamer(logger);
+            var streamer = new WebSocketStreamer();
             var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = Secrets.ApiKey};
             var clientWebSocket = new WrappedClientWebsocket();
-            _client = new CryptoCompareWebSocketClient(clientWebSocket, apiDetailsProvider, streamer, logger);
+            _client = new CryptoCompareWebSocketClient(clientWebSocket, apiDetailsProvider, streamer);
         }
 
         [Fact]

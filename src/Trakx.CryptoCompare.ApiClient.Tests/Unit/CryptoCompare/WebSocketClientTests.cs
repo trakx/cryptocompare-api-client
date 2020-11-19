@@ -34,7 +34,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
             var logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger()
                 .ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
-            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, _apiConfiguration, _webSocketStreamer, logger);
+            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, _apiConfiguration, _webSocketStreamer);
         }
 
         [Fact]

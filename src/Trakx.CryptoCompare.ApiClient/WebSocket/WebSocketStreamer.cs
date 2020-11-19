@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Text.Json;
 using Serilog;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
@@ -25,12 +26,11 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
 
     public class WebSocketStreamer : IWebSocketStreamer
     {
-        private readonly ILogger _logger;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private readonly ISubject<InboundMessageBase> _incomingMessageSubject;
         
-        public WebSocketStreamer(ILogger logger)
+        public WebSocketStreamer()
         {
-            _logger = logger;
             _incomingMessageSubject = new ReplaySubject<InboundMessageBase>(1);
         }
 
@@ -50,11 +50,11 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         {
             try
             {
-                _logger.Verbose("Received WebSocketInboundMessage {0}{1}", Environment.NewLine, rawMessage);
+                Logger.Verbose("Received WebSocketInboundMessage {0}{1}", Environment.NewLine, rawMessage);
                 var message = JsonSerializer.Deserialize<InboundMessageBase>(rawMessage);
                 if (message == default)
                 {
-                    _logger.Warning("Failed to parse message {rawMessage} as a known InboundMessageBase", rawMessage);
+                    Logger.Warning("Failed to parse message {rawMessage} as a known InboundMessageBase", rawMessage);
                     return;
                 }
                 switch (message.Type)
@@ -95,7 +95,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "Failed to publish {0}", rawMessage);
+                Logger.Error(exception, "Failed to publish {0}", rawMessage);
             }
         }
     }
