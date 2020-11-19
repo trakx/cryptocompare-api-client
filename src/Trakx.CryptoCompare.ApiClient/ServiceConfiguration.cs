@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Serilog;
 using Trakx.CryptoCompare.ApiClient.Rest;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 
@@ -20,6 +22,11 @@ namespace Trakx.CryptoCompare.ApiClient
 
         public static IServiceCollection AddCryptoCompareClient(this IServiceCollection services, IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose().CreateLogger();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => Log.CloseAndFlush();
+
+            services.AddSingleton(Log.Logger);
+
             services.AddOptions();
             services.Configure<CryptoCompareApiConfiguration>(configuration.GetSection(nameof(CryptoCompareApiConfiguration)));
 
