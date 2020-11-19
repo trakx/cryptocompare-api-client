@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
 
@@ -16,29 +18,27 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         private readonly IClientWebsocket _client;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private readonly ILogger _logger;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private Task? _listenToWebSocketTask;
 
         public IWebSocketStreamer WebSocketStreamer { get; }
 
         public CryptoCompareWebSocketClient(IClientWebsocket clientWebSocket,
-            CryptoCompareApiConfiguration configuration, 
-            IWebSocketStreamer webSocketStreamer, 
-            ILogger logger)
+            IOptions<CryptoCompareApiConfiguration> configuration, 
+            IWebSocketStreamer webSocketStreamer)
         {
-            _configuration = configuration;
+            _configuration = configuration.Value;
             _client = clientWebSocket;
             WebSocketStreamer = webSocketStreamer;
-            _logger = logger;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public async Task Connect()
         {
-            _logger.Information("Opening CryptoCompare websocket");
+            Logger.Information("Opening CryptoCompare websocket");
             if (_client.State != WebSocketState.Open) 
                 await _client.ConnectAsync(_configuration.WebSocketEndpoint, _cancellationTokenSource.Token).ConfigureAwait(false);
-            _logger.Information("CryptoCompare websocket state {0}", State);
+            Logger.Information("CryptoCompare websocket state {0}", State);
             await StartListening(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
@@ -56,7 +56,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "Failed to add subscriptions.");
+                Logger.Error(exception, "Failed to add subscriptions.");
             }
         }
 
@@ -82,16 +82,16 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                     if (!string.IsNullOrWhiteSpace(result)) WebSocketStreamer.PublishInboundMessageOnStream(result);
                 }
             }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default).ConfigureAwait(false);
-            _logger.Information("Listening to incoming messages");   
+            Logger.Information("Listening to incoming messages");   
         }
 
         public async Task Disconnect()
         {
-            _logger.Information("Closing CryptoCompare websocket");
+            Logger.Information("Closing CryptoCompare websocket");
             await _client.CloseAsync(WebSocketCloseStatus.NormalClosure,
                 "CryptoCompare WebClient getting disposed.",
                 _cancellationTokenSource.Token);
-            _logger.Information("Closed CryptoCompare websocket");
+            Logger.Information("Closed CryptoCompare websocket");
         }
 
         private async Task StopListening()
@@ -100,7 +100,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             {
                 await Task.Delay(100, _cancellationTokenSource.Token).ConfigureAwait(false);
             }
-            _logger.Information("CryptoCompare websocket state {0}", State);
+            Logger.Information("CryptoCompare websocket state {0}", State);
         }
 
         #region IDisposable

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using NSubstitute;
-using Serilog;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
 using Xunit;
@@ -31,10 +30,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
             };
             _innerClient = Substitute.For<IClientWebsocket>();
             _webSocketStreamer = Substitute.For<IWebSocketStreamer>();
-            var logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger()
-                .ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
-            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, _apiConfiguration, _webSocketStreamer, logger);
+            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, Options.Create(_apiConfiguration), _webSocketStreamer);
         }
 
         [Fact]

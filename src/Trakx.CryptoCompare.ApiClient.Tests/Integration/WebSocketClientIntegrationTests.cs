@@ -4,11 +4,10 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Serilog;
+using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
@@ -26,12 +25,10 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
         public WebSocketClientIntegrationTests(ITestOutputHelper output)
         {
             _output = output;
-            var logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger()
-                .ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
-            var streamer = new WebSocketStreamer(logger);
+            var streamer = new WebSocketStreamer();
             var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = Secrets.ApiKey};
             var clientWebSocket = new WrappedClientWebsocket();
-            _client = new CryptoCompareWebSocketClient(clientWebSocket, apiDetailsProvider, streamer, logger);
+            _client = new CryptoCompareWebSocketClient(clientWebSocket, Options.Create(apiDetailsProvider), streamer);
         }
 
         [Fact]
