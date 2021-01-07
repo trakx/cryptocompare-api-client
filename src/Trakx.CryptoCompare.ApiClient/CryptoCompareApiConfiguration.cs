@@ -10,7 +10,7 @@ namespace Trakx.CryptoCompare.ApiClient
         public string RestBaseUrl { get; set; }
         public string WebSocketBaseUrl { get; set; } = "wss://streamer.cryptocompare.com/";
         
-        [ReadmeDocument("ApiKey")]
+        [ReadmeDocument("CryptoCompareApiConfiguration__ApiKey")]
         public string ApiKey { get; set; }
          
         [JsonIgnore] public Uri WebSocketEndpoint => new Uri(new Uri(WebSocketBaseUrl), $"v2?api_key={ApiKey}");

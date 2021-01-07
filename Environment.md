@@ -3,10 +3,10 @@ In order to be able to run some integration tests, you should create a .env file
 
 ### Trakx.CryptoCompare.ApiClient.CryptoCompareApiConfiguration
 
-	ApiKey
+	CryptoCompareApiConfiguration__ApiKey
 
 ### Complete .env file sample
 
-	ApiKey
+	CryptoCompareApiConfiguration__ApiKey
 
 ### You should update the path to your .env file in src/Trakx.Tests/Tools/Secrets.cs
