@@ -128,8 +128,6 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.Configuration
 
                             if (typeProperties.Count() > 0)
                             {
-                                var instance = Activator.CreateInstance(x, new object[] { });
-
                                 foreach (var property in typeProperties)
                                 {
                                     if (property.GetCustomAttribute(typeof(ReadmeDocumentAttribute)) is ReadmeDocumentAttribute attribute)
