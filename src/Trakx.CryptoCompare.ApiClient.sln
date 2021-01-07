@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		CryptoCompare.targets = CryptoCompare.targets
 		cryptocompare_logo.png = cryptocompare_logo.png
+		..\Environment.md = ..\Environment.md
 		..\LICENSE = ..\LICENSE
 		Packable.Projects.props = Packable.Projects.props
 		package-icon.png = package-icon.png

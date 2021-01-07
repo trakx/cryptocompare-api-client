@@ -53,6 +53,9 @@ var btc = await CryptoCompareClient.Instance.Coins.SnapshotFullAsync(1182);
 Console.WriteLine(eth.Data.General.Name);
 ````
 
+## Configuration
+[How to configure your .env file](Environment.md)
+
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
