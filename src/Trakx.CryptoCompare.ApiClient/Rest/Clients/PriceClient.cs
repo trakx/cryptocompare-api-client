@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -64,8 +65,46 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             Check.NotEmpty(toSymbols, nameof(toSymbols));
             Check.NotEmpty(fromSymbols, nameof(fromSymbols));
 
-            return await this.GetAsync<PriceMultiResponse>(
-                       ApiUrls.PriceMulti(fromSymbols, toSymbols, tryConversion, exchangeName)).ConfigureAwait(false);
+            var groupsOfSymbols = GroupSymbolsByListsOfMaxCsvCharacters(fromSymbols.ToList());
+
+            var fetchTasks = groupsOfSymbols.Select(s => this.GetAsync<PriceMultiResponse>(
+                    ApiUrls.PriceMulti(s, toSymbols, tryConversion, exchangeName)))
+                .ToArray();
+
+            await Task.WhenAll(fetchTasks);
+
+            var results = fetchTasks
+                .SelectMany(t => t.Result)
+                .ToDictionary(p => p.Key, p => p.Value);
+            var mergedResults = new PriceMultiResponse(results);
+
+            return mergedResults;
+        }
+
+        private static List<List<string>> GroupSymbolsByListsOfMaxCsvCharacters(IReadOnlyList<string> fromSymbolList, int maxLength = 300)
+        {
+            var i = 0;
+            var groupsOfSymbols = new List<List<string>>();
+
+            do
+            {
+                var includedFromSymbols = new List<string>();
+                var length = 0;
+                do
+                {
+                    if (length + fromSymbolList[i].Length + 1 < maxLength)
+                    {
+                        length += fromSymbolList[i].Length + 1;
+                        includedFromSymbols.Add(fromSymbolList[i]);
+                        i++;
+                    }
+                    else length = maxLength;
+                } while (length < maxLength && i < fromSymbolList.Count);
+
+                groupsOfSymbols.Add(includedFromSymbols);
+            } while (i < fromSymbolList.Count);
+
+            return groupsOfSymbols;
         }
 
         /// <summary>

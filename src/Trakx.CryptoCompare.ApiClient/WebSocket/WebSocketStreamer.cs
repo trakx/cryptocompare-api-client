@@ -13,7 +13,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         IObservable<InboundMessageBase> AllInboundMessagesStream { get; }
         IObservable<Trade> TradeStream { get; }
         IObservable<Ticker> TickerStream { get; }
-        IObservable<AggregateIndex> AggregateIndiceStream { get; }
+        IObservable<AggregateIndex> AggregateIndexStream { get; }
         IObservable<Ohlc> OhlcStream { get; }
         IObservable<SubscribeComplete> SubscribeCompleteStream { get; }
         IObservable<UnsubscribeComplete> UnsubscribeCompleteStream { get; }
@@ -37,7 +37,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         public IObservable<InboundMessageBase> AllInboundMessagesStream => _incomingMessageSubject.AsObservable();
         public IObservable<Trade> TradeStream => _incomingMessageSubject.OfType<Trade>().AsObservable();
         public IObservable<Ticker> TickerStream => _incomingMessageSubject.OfType<Ticker>().AsObservable();
-        public IObservable<AggregateIndex> AggregateIndiceStream => _incomingMessageSubject.OfType<AggregateIndex>().AsObservable();
+        public IObservable<AggregateIndex> AggregateIndexStream => _incomingMessageSubject.OfType<AggregateIndex>().AsObservable();
         public IObservable<Ohlc> OhlcStream => _incomingMessageSubject.OfType<Ohlc>().AsObservable();
         public IObservable<SubscribeComplete> SubscribeCompleteStream => _incomingMessageSubject.OfType<SubscribeComplete>().AsObservable();
         public IObservable<UnsubscribeComplete> UnsubscribeCompleteStream => _incomingMessageSubject.OfType<UnsubscribeComplete>().AsObservable();
