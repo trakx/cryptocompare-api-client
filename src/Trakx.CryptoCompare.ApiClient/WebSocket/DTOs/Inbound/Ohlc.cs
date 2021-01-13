@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Trakx.CryptoCompare.ApiClient.Serialisation.Converters;
+using Trakx.Utils.Serialization.Converters;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
 {
