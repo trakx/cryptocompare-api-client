@@ -1,8 +1,7 @@
-# cryptocompare-api
+# cryptocompare-api-client
 
-[![Build status](https://dev.azure.com/joan-caron-oss/cryptocompare-api/_apis/build/status/cryptocompare-api-windows)](https://dev.azure.com/joan-caron-oss/cryptocompare-api/_build/latest?definitionId=1)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2dec058efba4445ba2af6e0e54308758)](https://www.codacy.com/app/joancaron/cryptocompare-api?utm_source=github.com&utm_medium=referral&utm_content=joancaron/cryptocompare-api&utm_campaign=badger)
-[![NuGet](https://img.shields.io/nuget/v/CryptoCompare.svg)](https://www.nuget.org/packages/CryptoCompare/)
+![.NET Core](https://github.com/trakx/cryptocompare-api-client/workflows/.NET%20Core/badge.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trakx/cryptocompare-api-client&amp;utm_campaign=Badge_Grade)
 
 ![logo](https://raw.githubusercontent.com/joancaron/cryptocompare-api/master/cryptocompare_logo.png)
 
