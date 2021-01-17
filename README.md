@@ -1,7 +1,8 @@
 # cryptocompare-api-client
 
-![.NET Core](https://github.com/trakx/cryptocompare-api-client/workflows/.NET%20Core/badge.svg)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trakx/cryptocompare-api-client&amp;utm_campaign=Badge_Grade)
+![.NET Core](https://github.com/trakx/cryptocompare-api-client/workflows/.NET%20Core/badge.svg) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trakx/cryptocompare-api-client&amp;utm_campaign=Badge_Grade) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&utm_medium=referral&utm_content=trakx/cryptocompare-api-client&utm_campaign=Badge_Coverage)
 
 ![logo](https://raw.githubusercontent.com/joancaron/cryptocompare-api/master/cryptocompare_logo.png)
 
