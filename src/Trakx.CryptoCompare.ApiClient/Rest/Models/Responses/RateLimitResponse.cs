@@ -1,4 +1,5 @@
-﻿namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
+﻿#pragma warning disable 8618
+namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
     /// <summary>
     /// A rate limit.

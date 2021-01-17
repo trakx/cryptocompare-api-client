@@ -40,6 +40,12 @@ paket add CryptoCompare
 	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
 </a>
 
+## Creating your local .env file
+In order to be able to run some integration tests, you should create a `.env` file in the `src` folder with the following variables:
+```secretsEnvVariables
+CryptoCompareApiConfiguration__ApiKey=********
+```
+
 ## Basic usage
 ````csharp
 // Using ctor

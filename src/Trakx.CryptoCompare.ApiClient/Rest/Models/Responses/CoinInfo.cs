@@ -1,11 +1,12 @@
-﻿namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
+﻿#pragma warning disable 8618
+
+namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
     /// <summary>
     /// Information about the coin. (Coin list endpoint)
     /// </summary>
-    public class CoinInfo
+public class CoinInfo
     {
-#nullable disable
         /// <summary>
         /// Gets or sets the algorithm of the coin.
         /// </summary>
@@ -88,6 +89,5 @@
         /// Gets or sets the url of the coin on cryptocompare.
         /// </summary>
         public string? Url { get; set; }
-#nullable restore
     }
 }

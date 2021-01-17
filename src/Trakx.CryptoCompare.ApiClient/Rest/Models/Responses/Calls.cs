@@ -1,9 +1,10 @@
-﻿namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
+﻿#pragma warning disable 8618
+namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
     /// <summary>
     /// Api calls.
     /// </summary>
-    public class Calls
+public class Calls
     {
         /// <summary>
         /// Calls to history apis.
