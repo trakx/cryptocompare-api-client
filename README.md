@@ -1,8 +1,8 @@
-# cryptocompare-api
+# cryptocompare-api-client
 
-[![Build status](https://dev.azure.com/joan-caron-oss/cryptocompare-api/_apis/build/status/cryptocompare-api-windows)](https://dev.azure.com/joan-caron-oss/cryptocompare-api/_build/latest?definitionId=1)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2dec058efba4445ba2af6e0e54308758)](https://www.codacy.com/app/joancaron/cryptocompare-api?utm_source=github.com&utm_medium=referral&utm_content=joancaron/cryptocompare-api&utm_campaign=badger)
-[![NuGet](https://img.shields.io/nuget/v/CryptoCompare.svg)](https://www.nuget.org/packages/CryptoCompare/)
+![.NET Core](https://github.com/trakx/cryptocompare-api-client/workflows/.NET%20Core/badge.svg) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=trakx/cryptocompare-api-client&amp;utm_campaign=Badge_Grade) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/cc015709dab343b89b53eb42314ac159)](https://www.codacy.com/gh/trakx/cryptocompare-api-client/dashboard?utm_source=github.com&utm_medium=referral&utm_content=trakx/cryptocompare-api-client&utm_campaign=Badge_Coverage)
 
 ![logo](https://raw.githubusercontent.com/joancaron/cryptocompare-api/master/cryptocompare_logo.png)
 
@@ -40,6 +40,12 @@ paket add CryptoCompare
 <a href="https://www.patreon.com/joancaron">
 	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
 </a>
+
+## Creating your local .env file
+In order to be able to run some integration tests, you should create a `.env` file in the `src` folder with the following variables:
+```secretsEnvVariables
+CryptoCompareApiConfiguration__ApiKey=********
+```
 
 ## Basic usage
 ````csharp

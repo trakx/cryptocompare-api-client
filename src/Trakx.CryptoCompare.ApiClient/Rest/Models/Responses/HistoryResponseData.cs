@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Trakx.CryptoCompare.ApiClient.Rest.Converters;
+#pragma warning disable 8618
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
