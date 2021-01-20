@@ -26,7 +26,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
         {
             _output = output;
             var streamer = new WebSocketStreamer();
-            var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = Secrets.ApiKey};
+            var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = new Secrets().ApiKey};
             var clientWebSocket = new WrappedClientWebsocket();
             _client = new CryptoCompareWebSocketClient(clientWebSocket, Options.Create(apiDetailsProvider), streamer);
         }
