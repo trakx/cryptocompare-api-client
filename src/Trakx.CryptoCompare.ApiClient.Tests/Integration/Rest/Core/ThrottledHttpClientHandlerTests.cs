@@ -17,7 +17,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
 
             var configuration = new CryptoCompareApiConfiguration
             {
-                ApiKey = Secrets.ApiKey,
+                ApiKey = new Secrets().ApiKey,
                 ThrottleDelayMs = throttleDelayMs
             };
             var options = Options.Create(configuration);

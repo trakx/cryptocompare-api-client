@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
-
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
-using Trakx.CryptoCompare.ApiClient.Rest.Clients;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Xunit;
 

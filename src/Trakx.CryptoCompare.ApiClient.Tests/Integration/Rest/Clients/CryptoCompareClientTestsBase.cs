@@ -28,7 +28,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
         public CryptoCompareClient CryptoCompareClient { get; }
         public CryptoCompareApiFixture()
         {
-            var configuration = new CryptoCompareApiConfiguration { ApiKey = Secrets.ApiKey };
+            var configuration = new CryptoCompareApiConfiguration { ApiKey = new Secrets().ApiKey };
             var options = Options.Create(configuration)!;
             CryptoCompareClient = new CryptoCompareClient(options);
         }

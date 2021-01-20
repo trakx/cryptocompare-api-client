@@ -7,10 +7,9 @@ namespace Trakx.CryptoCompare.ApiClient
     public record CryptoCompareApiConfiguration
     {
 #nullable disable
-        public string RestBaseUrl { get; init; }
         public string WebSocketBaseUrl { get; init; } = "wss://streamer.cryptocompare.com/";
         
-        [SecretEnvironmentVariable(nameof(ApiKey))]
+        [SecretEnvironmentVariable]
         public string ApiKey { get; set; }
          
         [JsonIgnore] 
