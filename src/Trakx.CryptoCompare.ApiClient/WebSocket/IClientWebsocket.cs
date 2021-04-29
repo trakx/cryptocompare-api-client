@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Net.WebSockets;
+using System.Reflection;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket
 {
@@ -100,9 +103,17 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
           CancellationToken cancellationToken);
     }
 
-    public sealed class WrappedClientWebsocket : IClientWebsocket
+    public sealed class ResilientClientWebsocket : IClientWebsocket
     {
-        private readonly ClientWebSocket _client = new ClientWebSocket();
+        private ClientWebSocket _client;
+        private Uri _uri;
+        private CancellationToken _cancellationToken;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+
+        public ResilientClientWebsocket()
+        {
+            _client = new();
+        }
 
         #region Implementation of IDisposable
 
@@ -152,19 +163,39 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         /// <inheritdoc />
         public async Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
         {
+            _uri = uri;
+            _cancellationToken = cancellationToken;
             await _client.ConnectAsync(uri, cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
-            return await _client.ReceiveAsync(buffer, cancellationToken);
+            if (_cancellationToken.IsCancellationRequested) return default;
+            while (true)
+            {
+                try { return await _client.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false); }
+                catch (Exception ex)
+                {
+                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
+                    await TryReconnect();
+                }
+            }
         }
 
         /// <inheritdoc />
         public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken)
         {
-            return await _client.ReceiveAsync(buffer, cancellationToken);
+            if (_cancellationToken.IsCancellationRequested) return default;
+            while (true)
+            {
+                try { return await _client.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false); }
+                catch (Exception ex)
+                {
+                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
+                    await TryReconnect();
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -172,6 +203,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             CancellationToken cancellationToken)
         {
             await _client.SendAsync(buffer, messageType, endOfMessage, cancellationToken);
+
         }
 
         /// <inheritdoc />
@@ -182,5 +214,21 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         }
 
         #endregion
+
+        #region Helper Methods
+
+        private async Task TryReconnect()
+        {
+            Logger.Information($"Attempting to reconnect to '{_uri}'...");
+            try {
+                _client.Dispose();
+                _client = new ClientWebSocket();
+                await _client.ConnectAsync(_uri, _cancellationToken).ConfigureAwait(false);
+            }
+            catch (WebSocketException) { }
+        }
+
+        #endregion
+
     }
 }

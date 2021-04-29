@@ -27,11 +27,11 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             _output = output;
             var streamer = new WebSocketStreamer();
             var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = new Secrets().ApiKey};
-            var clientWebSocket = new WrappedClientWebsocket();
+            var clientWebSocket = new ResilientClientWebsocket();
             _client = new CryptoCompareWebSocketClient(clientWebSocket, Options.Create(apiDetailsProvider), streamer);
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Trade_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -40,7 +40,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<Trade>(btcUsdSubscription);
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Ticker_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -49,7 +49,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<Ticker>(btcUsdSubscription);
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_AggregateIndice_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -58,7 +58,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<AggregateIndex>(btcUsdSubscription);
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Ohlc_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -85,7 +85,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
 
 
             await _client.AddSubscriptions(subscription).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(500));
+            await Task.Delay(TimeSpan.FromMilliseconds(1000));
 
             messagesReceived.Count.Should().BeGreaterOrEqualTo(3);
 
@@ -94,7 +94,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             messagesReceived.OfType<LoadComplete>().Count().Should().BeGreaterOrEqualTo(1);
             
             await _client.RemoveSubscriptions(subscription).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(500));
+            await Task.Delay(TimeSpan.FromMilliseconds(1000));
 
             messagesReceived.Count.Should().BeGreaterOrEqualTo(5);
             messagesReceived.OfType<SubscribeComplete>().Count().Should().BeGreaterOrEqualTo(1);

@@ -31,10 +31,10 @@ namespace Trakx.CryptoCompare.ApiClient
         private static void AddCommonDependencies(IServiceCollection services)
         {
             services.AddSingleton<ICryptoCompareClient, CryptoCompareClient>();
-            services.AddTransient<IClientWebsocket, WrappedClientWebsocket>();
+            services.AddTransient<IClientWebsocket, ResilientClientWebsocket>();
             services.AddTransient<IWebSocketStreamer, WebSocketStreamer>();
             services.AddSingleton<ICryptoCompareWebSocketClient, CryptoCompareWebSocketClient>();
-            services.AddSingleton<WrappedClientWebsocket>();
+            services.AddSingleton<ResilientClientWebsocket>();
         }
     }
 }
