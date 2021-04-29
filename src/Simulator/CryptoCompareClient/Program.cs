@@ -6,7 +6,7 @@ using Trakx.CryptoCompare.ApiClient.WebSocket;
 
 namespace CryptoCompareWebSocketClient
 {
-    class Program
+    static class Program
     {
         static async Task Main(string[] args)
         {
@@ -21,7 +21,9 @@ namespace CryptoCompareWebSocketClient
                 Options.Create(config), streamer);
             using var sub = cryptoClient.WebSocketStreamer.HeartBeatStream.Subscribe(res =>
             {
+#if DEBUG
                 Console.WriteLine($"CryptoCompare Server has triggered HeartBeat event - {res.Message} -- {res.TimeMs}");
+#endif
             });
             await cryptoClient.Connect();
             Console.ReadKey();

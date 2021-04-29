@@ -23,19 +23,24 @@ namespace CryptoCompareServer.Middleware
             {
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
+#if DEBUG
                 Console.WriteLine("WebSocket Connected");
-
+#endif
                 await ReceiveAndSend(webSocket, (result, buffer) =>
                 {
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
+#if DEBUG
                         Console.WriteLine($"Receive->Text");
                         Console.WriteLine($"Message: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
+#endif
                         return;
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
+#if DEBUG
                         Console.WriteLine($"Receive->Close");
+#endif
 
                         return;
                     }
@@ -43,7 +48,6 @@ namespace CryptoCompareServer.Middleware
             }
             else
             {
-                Console.WriteLine("Hello from 2nd Request Delegate - No WebSocket");
                 await _next(context);
             }
         }
