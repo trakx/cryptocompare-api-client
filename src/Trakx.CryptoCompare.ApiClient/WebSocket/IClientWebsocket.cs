@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.WebSockets;
 using System.Reflection;
-using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
@@ -101,6 +100,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
           WebSocketMessageType messageType,
           bool endOfMessage,
           CancellationToken cancellationToken);
+
     }
 
     public sealed class ResilientClientWebsocket : IClientWebsocket
@@ -220,7 +220,8 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         private async Task TryReconnect()
         {
             Logger.Information($"Attempting to reconnect to '{_uri}'...");
-            try {
+            try
+            {
                 _client.Dispose();
                 _client = new ClientWebSocket();
                 await _client.ConnectAsync(_uri, _cancellationToken).ConfigureAwait(false);
