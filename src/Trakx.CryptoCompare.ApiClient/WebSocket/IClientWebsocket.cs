@@ -209,7 +209,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             if (_cancellationToken.IsCancellationRequested) return default;
             while (true)
             {
-                try { return await func(cancellationToken); }
+                try { return await func(cancellationToken).ConfigureAwait(false); }
                 catch (Exception ex)
                 {
                     Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
