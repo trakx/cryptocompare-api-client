@@ -169,33 +169,19 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         }
 
         /// <inheritdoc />
-        public async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, 
+            CancellationToken cancellationToken)
         {
-            if (_cancellationToken.IsCancellationRequested) return default;
-            while (true)
-            {
-                try { return await _client.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false); }
-                catch (Exception ex)
-                {
-                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
-                    await TryReconnect().ConfigureAwait(false);
-                }
-            }
+            return await ReceiveAsyncWithRetry(async _ 
+                => await _client.ReceiveAsync(buffer, cancellationToken), cancellationToken);
         }
 
         /// <inheritdoc />
-        public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken)
+        public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, 
+            CancellationToken cancellationToken)
         {
-            if (_cancellationToken.IsCancellationRequested) return default;
-            while (true)
-            {
-                try { return await _client.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false); }
-                catch (Exception ex)
-                {
-                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
-                    await TryReconnect().ConfigureAwait(false);
-                }
-            }
+            return await ReceiveAsyncWithRetry(async _
+                => await _client.ReceiveAsync(buffer, cancellationToken), cancellationToken);
         }
 
         /// <inheritdoc />
@@ -216,6 +202,21 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         #endregion
 
         #region Helper Methods
+
+        private async ValueTask<TResult> ReceiveAsyncWithRetry<TResult>(Func<CancellationToken, Task<TResult>> func, 
+            CancellationToken cancellationToken)
+        {
+            if (_cancellationToken.IsCancellationRequested) return default;
+            while (true)
+            {
+                try { return await func(cancellationToken); }
+                catch (Exception ex)
+                {
+                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
+                    await TryReconnect().ConfigureAwait(false);
+                }
+            }
+        }
 
         private async Task TryReconnect()
         {
