@@ -226,7 +226,10 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                 _client = new ClientWebSocket();
                 await _client.ConnectAsync(_uri, _cancellationToken).ConfigureAwait(false);
             }
-            catch { }
+            catch
+            {
+                // in this context, issues should be ignored.
+            }
         }
 
         #endregion

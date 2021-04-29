@@ -26,7 +26,7 @@ namespace CryptoCompareServer.Middleware
 #if DEBUG
                 Console.WriteLine("WebSocket Connected");
 #endif
-                await Send(webSocket);
+                await Send(webSocket).ConfigureAwait(false);
             }
             else
             {
