@@ -26,25 +26,7 @@ namespace CryptoCompareServer.Middleware
 #if DEBUG
                 Console.WriteLine("WebSocket Connected");
 #endif
-                await ReceiveAndSend(webSocket, (result, buffer) =>
-                {
-                    if (result.MessageType == WebSocketMessageType.Text)
-                    {
-#if DEBUG
-                        Console.WriteLine($"Receive->Text");
-                        Console.WriteLine($"Message: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
-#endif
-                        return;
-                    }
-                    else if (result.MessageType == WebSocketMessageType.Close)
-                    {
-#if DEBUG
-                        Console.WriteLine($"Receive->Close");
-#endif
-
-                        return;
-                    }
-                });
+                await Send(webSocket);
             }
             else
             {
@@ -52,14 +34,14 @@ namespace CryptoCompareServer.Middleware
             }
         }
 
-        private async Task ReceiveAndSend(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
+        private async Task Send(WebSocket socket)
         {
             while (socket.State == WebSocketState.Open)
             {
                 var data = $"{{ \"TYPE\": \"999\", \"MESSAGE\": \"AAA\", \"TIMEMS\": {DateTime.Now.Second} }}";
                 var buffer = Encoding.UTF8.GetBytes(data);
                 await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-                await Task.Delay(TimeSpan.FromSeconds(3));
+                await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
             }
         }
     }

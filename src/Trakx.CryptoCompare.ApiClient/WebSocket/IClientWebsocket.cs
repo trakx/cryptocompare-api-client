@@ -178,7 +178,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                 catch (Exception ex)
                 {
                     Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
-                    await TryReconnect();
+                    await TryReconnect().ConfigureAwait(false);
                 }
             }
         }
@@ -193,7 +193,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                 catch (Exception ex)
                 {
                     Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
-                    await TryReconnect();
+                    await TryReconnect().ConfigureAwait(false);
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                 _client = new ClientWebSocket();
                 await _client.ConnectAsync(_uri, _cancellationToken).ConfigureAwait(false);
             }
-            catch (WebSocketException) { }
+            catch { }
         }
 
         #endregion
