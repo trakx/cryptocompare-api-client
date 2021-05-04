@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Polly;
 using Serilog;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket
@@ -169,19 +170,22 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
         }
 
         /// <inheritdoc />
-        public async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, 
+        public async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer,
             CancellationToken cancellationToken)
         {
-            return await ReceiveAsyncWithRetry(async _ 
-                => await _client.ReceiveAsync(buffer, cancellationToken), cancellationToken);
+            var result = await ReceiveAsyncWithRetry(async _
+                => await _client.ReceiveAsync(buffer, cancellationToken)
+                    .ConfigureAwait(false), cancellationToken);
+            return result!;
         }
 
         /// <inheritdoc />
-        public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, 
+        public async ValueTask<ValueWebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer,
             CancellationToken cancellationToken)
         {
             return await ReceiveAsyncWithRetry(async _
-                => await _client.ReceiveAsync(buffer, cancellationToken), cancellationToken);
+                => await _client.ReceiveAsync(buffer, cancellationToken)
+                    .ConfigureAwait(false), cancellationToken);
         }
 
         /// <inheritdoc />
@@ -203,19 +207,17 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
 
         #region Helper Methods
 
-        private async ValueTask<TResult> ReceiveAsyncWithRetry<TResult>(Func<CancellationToken, Task<TResult>> func, 
+        private async ValueTask<TResult?> ReceiveAsyncWithRetry<TResult>(Func<CancellationToken, Task<TResult>> func,
             CancellationToken cancellationToken)
         {
-            if (_cancellationToken.IsCancellationRequested) return default;
-            while (true)
+            var retry = Policy.Handle<Exception>()
+                .WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(3),
+                    (_, _) => TryReconnect().ConfigureAwait(false));
+            return await retry.ExecuteAsync(async () =>
             {
-                try { return await func(cancellationToken).ConfigureAwait(false); }
-                catch (Exception ex)
-                {
-                    Logger.Warning(ex, $"Unable to retrieve data from '{_uri}'...");
-                    await TryReconnect().ConfigureAwait(false);
-                }
-            }
+                if (_cancellationToken.IsCancellationRequested) return default;
+                return await func(cancellationToken).ConfigureAwait(false);
+            });
         }
 
         private async Task TryReconnect()
