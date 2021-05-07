@@ -10,7 +10,7 @@ using Trakx.WebSockets.KeepAlivePolicies;
 
 namespace Trakx.WebSockets
 {
-    public abstract class WebSocketClient<TBaseMessage, TStreamer> : IWebSocketClient<TBaseMessage, TStreamer>, IAsyncDisposable
+    public abstract class WebSocketClient<TBaseMessage, TStreamer> : IWebSocketClient<TBaseMessage, TStreamer>, IAsyncDisposable, IDisposable
         where TBaseMessage : IBaseInboundMessage
         where TStreamer : IWebSocketStreamer<TBaseMessage>
     {
@@ -141,7 +141,7 @@ namespace Trakx.WebSockets
             DisposeAsync(disposing).GetAwaiter().GetResult();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             WebSocket.Dispose();
             Dispose(true);

@@ -50,14 +50,14 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
                 WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
         }
 
-        protected override void Dispose(bool disposing)
+        public override void Dispose()
         {
+            base.Dispose(true);
             if (!_cancellationTokenSource.IsCancellationRequested)
             {
                 _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
             }
             _cancellationTokenSource.Dispose();
         }
-
     }
 }
