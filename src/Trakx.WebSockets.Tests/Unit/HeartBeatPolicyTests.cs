@@ -17,16 +17,15 @@ namespace Trakx.WebSockets.Tests.Unit
 
         private readonly TestScheduler _testScheduler;
         private readonly TimeSpan _maxDuration;
-        private readonly HeartBeatPolicy _policy;
 
         public HeartBeatPolicyTests(ITestOutputHelper output) 
             : base(output)
         {
             _maxDuration = TimeSpan.FromMinutes(3);
             _testScheduler = new TestScheduler();
-            _policy = new HeartBeatPolicy(HeartBeatMessage.TypeValue,
+            HeartBeatPolicy policy = new HeartBeatPolicy(HeartBeatMessage.TypeValue,
                 _maxDuration, DateTimeProvider, _testScheduler);
-            ConfigureKeepAlivePolicy(_policy);
+            ConfigureKeepAlivePolicy(policy);
         }
 
         [Fact]

@@ -17,7 +17,7 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         private readonly IDateTimeProvider _dateTimeProvider;
         private IDisposable? _subjectSubscription;
 
-        public HeartBeatPolicy(string topicName, TimeSpan maxDuration, 
+        public HeartBeatPolicy(string topicName, TimeSpan maxDuration,
             IDateTimeProvider dateTimeProvider, IScheduler? scheduler = default)
         {
             TopicName = topicName;
@@ -31,17 +31,18 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         public string TopicName { get; }
 
         public bool TryReconnectWhenExceptionHappens => true;
+
         public void ApplyStrategy<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
             where TInboundMessage : IBaseInboundMessage where TStreamer : IWebSocketStreamer<TInboundMessage>
         {
-            client.Streamer.GetStream<TInboundMessage>(TopicName).Subscribe(f => _lastHeartBeat = DateTime.UtcNow);
+            client.Streamer.GetStream<TInboundMessage>(TopicName).Subscribe(_ => _lastHeartBeat = DateTime.UtcNow);
             StartListening(client);
         }
 
         public async Task RunHeartBeatCheck<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
             where TInboundMessage : IBaseInboundMessage where TStreamer : IWebSocketStreamer<TInboundMessage>
         {
-            if(_lastHeartBeat == null) return;
+            if (_lastHeartBeat == null) return;
             var duration = _dateTimeProvider.UtcNow - _lastHeartBeat.Value;
             if (duration > _maxDuration)
             {
@@ -56,18 +57,15 @@ namespace Trakx.WebSockets.KeepAlivePolicies
                 .TakeUntil(_ => _cancellationTokenSource.Token.IsCancellationRequested)
                 .SelectMany(async _ =>
                 {
-                    await RunHeartBeatCheck(client);
+                    await RunHeartBeatCheck(client).ConfigureAwait(false);
                     return Task.CompletedTask;
                 });
-            _subjectSubscription = stream.Subscribe(f =>
-            {
-
-            });
+            _subjectSubscription = stream.Subscribe(_ => { });
         }
 
         public void Dispose()
         {
-            _subjectSubscription.Dispose();
+            _subjectSubscription?.Dispose();
         }
 
     }
