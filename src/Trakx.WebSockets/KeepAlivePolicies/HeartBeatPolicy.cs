@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
-using Namotion.Reflection;
 using Trakx.Utils.DateTimeHelpers;
 
 namespace Trakx.WebSockets.KeepAlivePolicies
@@ -17,7 +11,6 @@ namespace Trakx.WebSockets.KeepAlivePolicies
     {
 
         private DateTime? _lastHeartBeat;
-        private readonly IObserver<Task> _subscription;
         private readonly IScheduler? _scheduler;
         private readonly TimeSpan _maxDuration;
         private readonly CancellationTokenSource _cancellationTokenSource;
@@ -45,6 +38,17 @@ namespace Trakx.WebSockets.KeepAlivePolicies
             StartListening(client);
         }
 
+        public async Task RunHeartBeatCheck<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
+            where TInboundMessage : IBaseInboundMessage where TStreamer : IWebSocketStreamer<TInboundMessage>
+        {
+            if(_lastHeartBeat == null) return;
+            var duration = _dateTimeProvider.UtcNow - _lastHeartBeat.Value;
+            if (duration > _maxDuration)
+            {
+                await client.WebSocket.RecycleConnectionAsync(_cancellationTokenSource.Token);
+            }
+        }
+
         private void StartListening<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
             where TInboundMessage : IBaseInboundMessage where TStreamer : IWebSocketStreamer<TInboundMessage>
         {
@@ -52,11 +56,7 @@ namespace Trakx.WebSockets.KeepAlivePolicies
                 .TakeUntil(_ => _cancellationTokenSource.Token.IsCancellationRequested)
                 .SelectMany(async _ =>
                 {
-                    var duration = _dateTimeProvider.UtcNow - _lastHeartBeat.Value;
-                    if (duration > _maxDuration)
-                    {
-                        await client.WebSocket.RecycleConnectionAsync(_cancellationTokenSource.Token);
-                    }
+                    await RunHeartBeatCheck(client);
                     return Task.CompletedTask;
                 });
             _subjectSubscription = stream.Subscribe(f =>

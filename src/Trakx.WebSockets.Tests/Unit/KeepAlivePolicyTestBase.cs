@@ -56,5 +56,15 @@ namespace Trakx.WebSockets.Tests.Unit
                 });
         }
 
+        protected async Task FlushData()
+        {
+            while (!Client.Streamer.ReceivedCalls().Any())
+            {
+                await Task.Delay(10).ConfigureAwait(false);
+            }
+        }
+
+
+
     }
 }

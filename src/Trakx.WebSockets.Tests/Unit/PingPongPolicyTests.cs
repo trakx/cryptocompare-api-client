@@ -29,11 +29,7 @@ namespace Trakx.WebSockets.Tests.Unit
                 Type = PriceChangedMessage.TypeValue
             });
             await Client.Connect();
-            while (!Client.Streamer.ReceivedCalls().Any())
-            {
-                await Task.Delay(10).ConfigureAwait(false);
-            }
-
+            await FlushData();
             Client.Streamer.Received().PublishInboundMessageOnStream(Arg.Any<string>());
         }
 
