@@ -11,16 +11,16 @@ namespace Trakx.WebSockets.KeepAlivePolicies
     {
 
         private DateTime? _lastHeartBeat;
-        private readonly IScheduler? _scheduler;
+        private readonly IScheduler _scheduler;
         private readonly TimeSpan _maxDuration;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private IDisposable? _subjectSubscription;
+        private IDisposable _subscription;
 
-        public HeartBeatPolicy(string topicName, TimeSpan maxDuration,
-            IDateTimeProvider dateTimeProvider, IScheduler? scheduler = default)
+        public HeartBeatPolicy(string streamName, TimeSpan maxDuration,
+            IDateTimeProvider dateTimeProvider, IScheduler scheduler = default)
         {
-            TopicName = topicName;
+            StreamName = streamName;
             _maxDuration = maxDuration;
             _dateTimeProvider = dateTimeProvider;
             _scheduler = scheduler ?? Scheduler.Default;
@@ -28,14 +28,16 @@ namespace Trakx.WebSockets.KeepAlivePolicies
             _lastHeartBeat = dateTimeProvider.UtcNow;
         }
 
-        public string TopicName { get; }
+        public string StreamName { get; }
 
-        public bool TryReconnectWhenExceptionHappens => true;
+        public bool TryReconnectWhenWebSocketErrors => true;
 
-        public void ApplyStrategy<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
+        public void Apply<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
             where TInboundMessage : IBaseInboundMessage where TStreamer : IWebSocketStreamer<TInboundMessage>
         {
-            client.Streamer.GetStream<TInboundMessage>(TopicName).Subscribe(_ => _lastHeartBeat = DateTime.UtcNow);
+            var stream = client.Streamer.GetStream<TInboundMessage>(StreamName);
+            if (stream == null) throw new ArgumentOutOfRangeException(nameof(StreamName));
+            stream.Subscribe(_ => _lastHeartBeat = DateTime.UtcNow);
             StartListening(client);
         }
 
@@ -60,12 +62,12 @@ namespace Trakx.WebSockets.KeepAlivePolicies
                     await RunHeartBeatCheck(client).ConfigureAwait(false);
                     return Task.CompletedTask;
                 });
-            _subjectSubscription = stream.Subscribe(_ => { });
+            _subscription = stream.Subscribe(_ => { });
         }
 
         public void Dispose()
         {
-            _subjectSubscription?.Dispose();
+            _subscription?.Dispose();
         }
 
     }

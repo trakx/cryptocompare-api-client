@@ -18,7 +18,7 @@ namespace Trakx.WebSockets
         private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private readonly IKeepAlivePolicy _keepAlivePolicy;
         private readonly string _baseUrl;
-        private Task? _listenToWebSocketTask;
+        private Task _listenToWebSocketTask;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
 
@@ -41,7 +41,7 @@ namespace Trakx.WebSockets
                 await WebSocket.ConnectAsync(new Uri(_baseUrl), _cancellationTokenSource.Token).ConfigureAwait(false);
             _logger.Information("Wrapped websocket state {0}", WebSocket.State);
             await StartListening(_cancellationTokenSource.Token).ConfigureAwait(false);
-            _keepAlivePolicy.ApplyStrategy(this);
+            _keepAlivePolicy.Apply(this);
         }
 
         private async Task StartListening(CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ namespace Trakx.WebSockets
                 catch (Exception e)
                 {
                     _logger.Error(e, $"Failed to receive data from {_baseUrl}");
-                    if (!_keepAlivePolicy.TryReconnectWhenExceptionHappens) throw;
+                    if (!_keepAlivePolicy.TryReconnectWhenWebSocketErrors) throw;
                     else await TryReconnect().ConfigureAwait(false);
                 }
             }

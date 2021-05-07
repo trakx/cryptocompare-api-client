@@ -53,7 +53,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             };
         }
 
-        public override IObservable<TMessageType> GetStream<TMessageType>(string topicName)
+        public override IObservable<TMessageType>? GetStream<TMessageType>(string topicName)
         {
             var topics = GetStreams();
             return topics.ContainsKey(topicName) ? topics[topicName].Cast<TMessageType>() : null;

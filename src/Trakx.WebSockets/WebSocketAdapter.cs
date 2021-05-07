@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.WebSockets;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
@@ -12,7 +13,7 @@ namespace Trakx.WebSockets
 
         private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private ClientWebSocket _client = new();
-        private Uri? _uri;
+        private Uri _uri;
 
         #region Implementation of IClientWebsocket
 
@@ -87,6 +88,13 @@ namespace Trakx.WebSockets
             CancellationToken cancellationToken)
         {
             await _client.SendAsync(buffer, messageType, endOfMessage, cancellationToken);
+        }
+
+        public async Task PingServer(string message, CancellationToken cancellationToken)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(message).AsMemory();
+            await SendAsync(messageBytes, WebSocketMessageType.Text, true,
+                cancellationToken);
         }
 
         public async Task<bool> RecycleConnectionAsync(CancellationToken cancellationToken)

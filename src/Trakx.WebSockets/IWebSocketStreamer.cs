@@ -12,7 +12,7 @@ namespace Trakx.WebSockets
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        Type? GetMessageType(string typeName);
+        Type GetMessageType(string typeName);
 
         /// <summary>
         /// Returns the main stream of the messages.
@@ -31,7 +31,7 @@ namespace Trakx.WebSockets
         /// <typeparam name="TMessageType"></typeparam>
         /// <param name="name"></param>
         /// <returns></returns>
-        IObservable<TMessageType> GetStream<TMessageType>(string name);
+        IObservable<TMessageType>? GetStream<TMessageType>(string name);
 
         /// <summary>
         /// Publish one message from websocket to streamer.

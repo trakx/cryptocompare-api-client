@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Trakx.WebSockets
 {

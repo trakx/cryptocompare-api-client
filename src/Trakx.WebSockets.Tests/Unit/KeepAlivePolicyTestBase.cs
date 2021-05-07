@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Trakx.Utils.DateTimeHelpers;
@@ -14,19 +15,24 @@ using Xunit.Abstractions;
 
 namespace Trakx.WebSockets.Tests.Unit
 {
-    public class KeepAlivePolicyTestBase
+    public class KeepAlivePolicyTestBase<TPolicy>
+    where TPolicy : IKeepAlivePolicy
     {
 
         protected WebSocketClient<BaseInboundMessage, IDummyWebSocketStreamer> Client;
         protected readonly IWebSocketAdapter WebSocketAdapter;
         protected readonly IDummyWebSocketStreamer WebSocketStreamer;
         protected readonly IDateTimeProvider DateTimeProvider;
+        protected readonly TestScheduler TestScheduler;
+        protected TPolicy Policy { get; init; }
 
         public KeepAlivePolicyTestBase(ITestOutputHelper output)
         {
             DateTimeProvider = Substitute.For<IDateTimeProvider>();
             WebSocketAdapter = Substitute.For<IWebSocketAdapter>();
             WebSocketStreamer = Substitute.For<IDummyWebSocketStreamer>();
+            TestScheduler = new TestScheduler();
+            DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
         }
 
         public void ConfigureKeepAlivePolicy(IKeepAlivePolicy policy)
@@ -37,7 +43,7 @@ namespace Trakx.WebSockets.Tests.Unit
 
         protected void SimulateWebSocketResponse(BaseInboundMessage message, bool isCloseMessage = false)
         {
-            WebSocketAdapter.State.Returns(WebSocketState.Open, WebSocketState.Open, WebSocketState.Open, WebSocketState.Open, WebSocketState.Open, WebSocketState.Open, WebSocketState.Open, WebSocketState.Closed);
+            WebSocketAdapter.State.Returns(WebSocketState.Open, WebSocketState.Open, WebSocketState.Closed);
             var messageBytes = Encoding.UTF8.GetBytes(JObject.FromObject(message).ToString()).AsMemory();
             WebSocketAdapter.ReceiveAsync(Arg.Any<ArraySegment<byte>>(), Arg.Any<CancellationToken>())
                 .Returns(async ci =>
@@ -62,7 +68,11 @@ namespace Trakx.WebSockets.Tests.Unit
             }
         }
 
-
+        protected void AdvanceTime(long ticks)
+        {
+            DateTimeProvider.UtcNow.Returns(DateTimeProvider.UtcNow.AddTicks(ticks));
+            TestScheduler.AdvanceTo(ticks);
+        }
 
     }
 }

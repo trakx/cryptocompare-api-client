@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 using NSubstitute;
 using Trakx.WebSockets.KeepAlivePolicies;
@@ -9,28 +11,62 @@ using Xunit.Abstractions;
 
 namespace Trakx.WebSockets.Tests.Unit
 {
-    public class PingPongPolicyTests : KeepAlivePolicyTestBase
+    public class PingPongPolicyTests : KeepAlivePolicyTestBase<PingPongPolicy>
     {
 
-        public PingPongPolicyTests(ITestOutputHelper output) : base(output)
+        public PingPongPolicyTests(ITestOutputHelper output)
+            : base(output)
         {
-            ConfigureKeepAlivePolicy(new PingPongPolicy());
+            string pingMessage = "ping server";
+            string expectedPongMessage = "pong server";
+            var expectedPongInterval = TimeSpan.FromMinutes(3);
+            Policy = new PingPongPolicy(pingMessage,
+                expectedPongInterval, expectedPongMessage, DateTimeProvider,
+                TestScheduler);
+            ConfigureKeepAlivePolicy(Policy);
         }
 
         [Fact]
-        public async Task ApplyStrategy_should_return_if_server_does_not_respond_a_ping_with_a_pong_after_sometime()
+        public async Task ApplyStrategy_should_not_reconnect_if_ping_pong_logic_intervals_are_respected()
         {
             DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
-            SimulateWebSocketResponse(new PriceChangedMessage
+            SimulateWebSocketResponse(new HeartBeatMessage
             {
-                Symbol = "abc",
-                Price = (decimal)1.99,
                 Timestamp = DateTime.UtcNow,
-                Type = PriceChangedMessage.TypeValue
+                Type = HeartBeatMessage.TypeValue
             });
+            Client.WebSocket.State.Returns(WebSocketState.Open);
             await Client.Connect();
-            await FlushData();
-            Client.Streamer.Received().PublishInboundMessageOnStream(Arg.Any<string>());
+            Enumerable.Repeat(0, 10).Select(async _ =>
+            {
+                await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
+                AdvanceTime(Policy.ExpectedPongInterval.Ticks - 5);
+                await Task.Delay(150);
+                return 0;
+            });
+            await Client.WebSocket.DidNotReceive().RecycleConnectionAsync(Arg.Any<CancellationToken>());
+
+            Client.WebSocket.State.Returns(WebSocketState.Closed);
+        }
+
+        [Fact]
+        public async Task ApplyStrategy_should_reconnect_after_wait_pong_timeout_has_expired()
+        {
+            DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
+            SimulateWebSocketResponse(new HeartBeatMessage
+            {
+                Timestamp = DateTime.UtcNow,
+                Type = HeartBeatMessage.TypeValue
+            });
+            Client.WebSocket.State.Returns(WebSocketState.Open);
+            await Client.Connect();
+            await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
+
+            AdvanceTime(Policy.ExpectedPongInterval.Ticks);
+            await Task.Delay(150);
+            await Client.WebSocket.Received(1).RecycleConnectionAsync(Arg.Any<CancellationToken>());
+
+            Client.WebSocket.State.Returns(WebSocketState.Closed);
         }
 
     }

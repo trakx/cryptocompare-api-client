@@ -36,6 +36,7 @@ namespace Trakx.CryptoCompare.ApiClient
         {
             services.AddSingleton<ICryptoCompareClient, CryptoCompareClient>();
             services.AddTransient<IWebSocketAdapter, WebSocketAdapter>();
+            services.AddTransient<ICryptoCompareWebSocketStreamer, CryptoCompareWebSocketStreamer>();
             services.AddSingleton<ICryptoCompareWebSocketClient, CryptoCompareWebSocketClient>();
         }
     }

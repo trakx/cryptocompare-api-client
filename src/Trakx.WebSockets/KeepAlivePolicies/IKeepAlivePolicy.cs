@@ -3,9 +3,9 @@
     public interface IKeepAlivePolicy
     {
 
-        bool TryReconnectWhenExceptionHappens { get; }
+        bool TryReconnectWhenWebSocketErrors { get; }
 
-        void ApplyStrategy<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
+        void Apply<TInboundMessage, TStreamer>(IWebSocketClient<TInboundMessage, TStreamer> client)
             where TInboundMessage : IBaseInboundMessage
             where TStreamer : IWebSocketStreamer<TInboundMessage>;
 

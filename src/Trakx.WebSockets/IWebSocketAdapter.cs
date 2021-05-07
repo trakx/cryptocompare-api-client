@@ -103,6 +103,14 @@ namespace Trakx.WebSockets
           CancellationToken cancellationToken);
 
         /// <summary>
+        /// Send a message to the server represents a ping.
+        /// </summary>
+        /// <param name="message">Message to be sent to the server</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task PingServer(string message, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Recycle the connection with the dotnet websocket. It reconnects the user the connection gets lost.
         /// </summary>
         /// <param name="cancellationToken"></param>
