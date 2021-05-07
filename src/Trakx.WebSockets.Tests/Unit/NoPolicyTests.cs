@@ -22,7 +22,7 @@ namespace Trakx.WebSockets.Tests.Unit
         [Fact]
         public async Task ApplyStrategy_should_not_do_anything_if_websocket_server_is_not_responding_for_a_long_time()
         {
-            SimulateWebSocketResponse(new PriceChangedMessage
+            SimulateJsonResponse(new PriceChangedMessage
             {
                 Symbol = "abc",
                 Price = (decimal)1.99,

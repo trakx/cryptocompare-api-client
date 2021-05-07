@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Trakx.WebSockets
 {
@@ -26,6 +27,7 @@ namespace Trakx.WebSockets
         /// It returns the status of the last task executed by the listener.
         /// </summary>
         TaskStatus? ListenInboundMessagesTaskStatus { get; }
+
 
     }
 }

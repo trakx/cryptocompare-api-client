@@ -41,16 +41,33 @@ namespace Trakx.WebSockets.Tests.Unit
                 policy, WebSocketStreamer);
         }
 
-        protected void SimulateWebSocketResponse(BaseInboundMessage message, bool isCloseMessage = false)
+        protected void SimulateJsonResponse(BaseInboundMessage message)
         {
-            WebSocketAdapter.State.Returns(WebSocketState.Open, WebSocketState.Open, WebSocketState.Closed);
             var messageBytes = Encoding.UTF8.GetBytes(JObject.FromObject(message).ToString()).AsMemory();
             WebSocketAdapter.ReceiveAsync(Arg.Any<ArraySegment<byte>>(), Arg.Any<CancellationToken>())
                 .Returns(async ci =>
                 {
                     ((CancellationToken)ci[1]).ThrowIfCancellationRequested();
                     await Task.Delay(100).ConfigureAwait(false);
-                    var webSocketMessageType = isCloseMessage ? WebSocketMessageType.Close : WebSocketMessageType.Text;
+                    var webSocketMessageType = WebSocketMessageType.Text;
+                    return new WebSocketReceiveResult(messageBytes.Length, webSocketMessageType, true);
+                })
+                .AndDoes(ci =>
+                {
+                    var buffer = (ArraySegment<byte>)ci[0];
+                    messageBytes.TryCopyTo(buffer);
+                });
+        }
+
+        protected void SimulateRawResponse(string rawMessage)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(rawMessage).AsMemory();
+            WebSocketAdapter.ReceiveAsync(Arg.Any<ArraySegment<byte>>(), Arg.Any<CancellationToken>())
+                .Returns(async ci =>
+                {
+                    ((CancellationToken)ci[1]).ThrowIfCancellationRequested();
+                    await Task.Delay(50).ConfigureAwait(false);
+                    var webSocketMessageType = WebSocketMessageType.Text;
                     return new WebSocketReceiveResult(messageBytes.Length, webSocketMessageType, true);
                 })
                 .AndDoes(ci =>

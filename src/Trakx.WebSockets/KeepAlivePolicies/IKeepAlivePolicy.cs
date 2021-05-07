@@ -1,4 +1,6 @@
-﻿namespace Trakx.WebSockets.KeepAlivePolicies
+﻿using System;
+
+namespace Trakx.WebSockets.KeepAlivePolicies
 {
     public interface IKeepAlivePolicy
     {

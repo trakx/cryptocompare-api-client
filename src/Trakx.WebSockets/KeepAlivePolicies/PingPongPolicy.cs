@@ -37,8 +37,8 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         }
 
         public DateTime? LastPongDateTime => _lastPongDateTime;
-        
-        public TimeSpan ExpectedPongInterval => _pongTimeout;
+
+        public TimeSpan PongTimeout => _pongTimeout;
 
         public string PingMessage => _pingMessage;
 
@@ -57,7 +57,7 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         {
             _lastPongDateTime = _dateTimeProvider.UtcNow;
             client.WebSocket.PingServer(_pingMessage, _cancellationTokenSource.Token);
-            var stream = Observable.Interval(ExpectedPongInterval, _scheduler!)
+            var stream = Observable.Interval(PongTimeout / 3, _scheduler!)
                 .TakeUntil(_ => _cancellationTokenSource.Token.IsCancellationRequested)
                 .SelectMany(async _ =>
                 {
@@ -76,7 +76,7 @@ namespace Trakx.WebSockets.KeepAlivePolicies
                             await client.WebSocket.PingServer(PingMessage, _cancellationTokenSource.Token);
                         }
 
-                        if (_dateTimeProvider.UtcNow - LastPongDateTime >= ExpectedPongInterval)
+                        if (_dateTimeProvider.UtcNow - LastPongDateTime >= PongTimeout)
                         {
                             await client.WebSocket.RecycleConnectionAsync(_cancellationTokenSource.Token);
                         }

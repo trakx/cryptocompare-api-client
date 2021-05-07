@@ -19,9 +19,9 @@ namespace Trakx.WebSockets.Tests.Unit
         {
             string pingMessage = "ping server";
             string expectedPongMessage = "pong server";
-            var expectedPongInterval = TimeSpan.FromMinutes(3);
+            var pongTimeout = TimeSpan.FromMinutes(30);
             Policy = new PingPongPolicy(pingMessage,
-                expectedPongInterval, expectedPongMessage, DateTimeProvider,
+                pongTimeout, expectedPongMessage, DateTimeProvider,
                 TestScheduler);
             ConfigureKeepAlivePolicy(Policy);
         }
@@ -29,22 +29,31 @@ namespace Trakx.WebSockets.Tests.Unit
         [Fact]
         public async Task ApplyStrategy_should_not_reconnect_if_ping_pong_logic_intervals_are_respected()
         {
-            DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
-            SimulateWebSocketResponse(new HeartBeatMessage
+            SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
                 Type = HeartBeatMessage.TypeValue
             });
             Client.WebSocket.State.Returns(WebSocketState.Open);
+
             await Client.Connect();
-            Enumerable.Repeat(0, 10).Select(async _ =>
+            await Client.WebSocket.Received().PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
+
+            var repeat = 10;
+            while (repeat > 0)
             {
-                await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
-                AdvanceTime(Policy.ExpectedPongInterval.Ticks - 5);
-                await Task.Delay(150).ConfigureAwait(false);
-                return 0;
-            });
-            await Client.WebSocket.DidNotReceive().RecycleConnectionAsync(Arg.Any<CancellationToken>());
+                var lastPongTime = Policy.LastPongDateTime;
+
+                Client.WebSocket.ClearReceivedCalls();
+                SimulateRawResponse(Policy.ExpectedPongMessage);
+                AdvanceTime(Policy.PongTimeout.Add(TimeSpan.FromSeconds(-2)).Ticks);
+
+                while (lastPongTime == Policy.LastPongDateTime) { await Task.Delay(5); }
+
+                await Client.WebSocket.DidNotReceive().RecycleConnectionAsync(Arg.Any<CancellationToken>());
+                await Client.WebSocket.Received().PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
+                repeat--;
+            }
 
             Client.WebSocket.State.Returns(WebSocketState.Closed);
         }
@@ -52,19 +61,21 @@ namespace Trakx.WebSockets.Tests.Unit
         [Fact]
         public async Task ApplyStrategy_should_reconnect_after_wait_pong_timeout_has_expired()
         {
-            DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
-            SimulateWebSocketResponse(new HeartBeatMessage
+            SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
                 Type = HeartBeatMessage.TypeValue
             });
             Client.WebSocket.State.Returns(WebSocketState.Open);
-            await Client.Connect();
-            await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
 
-            AdvanceTime(Policy.ExpectedPongInterval.Ticks);
-            await Task.Delay(150).ConfigureAwait(false);
-            await Client.WebSocket.Received(1).RecycleConnectionAsync(Arg.Any<CancellationToken>());
+            await Client.Connect();
+            await Client.WebSocket.Received().PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
+
+            AdvanceTime(Policy.PongTimeout.Add(TimeSpan.FromSeconds(30)).Ticks);
+
+            await Task.Delay(300).ConfigureAwait(false);
+
+            await Client.WebSocket.Received().RecycleConnectionAsync(Arg.Any<CancellationToken>());
 
             Client.WebSocket.State.Returns(WebSocketState.Closed);
         }

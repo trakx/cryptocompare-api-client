@@ -28,7 +28,7 @@ namespace Trakx.WebSockets.Tests.Unit
         public async Task ApplyStrategy_should_recycle_connection_if_heartbeat_stream_is_not_triggered_after_max_duration()
         {
             Client.WebSocket.State.Returns(WebSocketState.Open);
-            SimulateWebSocketResponse(new HeartBeatMessage
+            SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
                 Type = HeartBeatMessage.TypeValue

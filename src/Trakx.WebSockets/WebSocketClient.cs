@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
+using Trakx.Utils.DateTimeHelpers;
 using Trakx.WebSockets.KeepAlivePolicies;
 
 namespace Trakx.WebSockets
@@ -19,17 +20,20 @@ namespace Trakx.WebSockets
         private readonly IKeepAlivePolicy _keepAlivePolicy;
         private readonly string _baseUrl;
         private Task _listenToWebSocketTask;
+        private DateTime? _lastConnectionRecycleDateTime;
         private readonly CancellationTokenSource _cancellationTokenSource;
-
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         protected WebSocketClient(IWebSocketAdapter websocket, string baseUrl,
-            IKeepAlivePolicy keepAlivePolicy, TStreamer streamer)
+            IKeepAlivePolicy keepAlivePolicy, TStreamer streamer, 
+            IDateTimeProvider dateTimeProvider = default)
         {
             WebSocket = websocket;
             Streamer = streamer;
             _baseUrl = baseUrl;
             _keepAlivePolicy = keepAlivePolicy;
             _cancellationTokenSource = new CancellationTokenSource();
+            _dateTimeProvider = dateTimeProvider ?? new DateTimeProvider();
         }
 
         public TaskStatus? ListenInboundMessagesTaskStatus => _listenToWebSocketTask?.Status;
@@ -105,6 +109,7 @@ namespace Trakx.WebSockets
 
         private async Task TryReconnect()
         {
+            _lastConnectionRecycleDateTime = _dateTimeProvider.UtcNow;
             await WebSocket.RecycleConnectionAsync(_cancellationTokenSource.Token);
         }
 
