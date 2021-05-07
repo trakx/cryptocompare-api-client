@@ -14,7 +14,7 @@ using Trakx.WebSockets.KeepAlivePolicies;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket
 {
-    public class CryptoCompareWebSocketClient : WebSocketClient<InboundMessageBase, ICryptoCompareWebSocketStreamer>, ICryptoCompareWebSocketClient
+    public class CryptoCompareWebSocketClient : WebSocketClient<InboundMessageBase, ICryptoCompareWebSocketStreamer>, ICryptoCompareWebSocketClient, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 

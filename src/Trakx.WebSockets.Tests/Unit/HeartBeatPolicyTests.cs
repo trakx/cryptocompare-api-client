@@ -43,7 +43,7 @@ namespace Trakx.WebSockets.Tests.Unit
             {
                 await Task.Delay(10).ConfigureAwait(false);
             }
-            // todo: to fix issue - await Client.WebSocket.Received().RecycleConnectionAsync(Arg.Any<CancellationToken>());
+            // todo: to implement logic to test policy
         }
 
     }
