@@ -1,16 +1,15 @@
-﻿using System.Net.WebSockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
+using Trakx.WebSockets;
 
 namespace Trakx.CryptoCompare.ApiClient.WebSocket
 {
-    public interface ICryptoCompareWebSocketClient
+    public interface ICryptoCompareWebSocketClient : IWebSocketClient<InboundMessageBase, ICryptoCompareWebSocketStreamer>
     {
-        IWebSocketStreamer WebSocketStreamer { get; }
-        WebSocketState State { get; }
-        TaskStatus? ListenInboundMessagesTaskStatus { get; }
-        Task Connect();
+
         Task AddSubscriptions(params ICryptoCompareSubscription[] subscriptions);
+
         Task RemoveSubscriptions(params ICryptoCompareSubscription[] subscriptions);
-        Task Disconnect();
+
     }
 }

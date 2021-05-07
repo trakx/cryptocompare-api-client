@@ -3,16 +3,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.Rest;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
+using Trakx.WebSockets;
+using Trakx.WebSockets.KeepAlivePolicies;
 
 namespace Trakx.CryptoCompare.ApiClient
 {
     public static class ServiceConfiguration
     {
         public static IServiceCollection AddCryptoCompareClient(
-            this IServiceCollection services, CryptoCompareApiConfiguration configuration)
+            this IServiceCollection services, CryptoCompareApiConfiguration configuration, 
+            IKeepAlivePolicy keepAliveStrategy)
         {
             var options = Options.Create(configuration);
             services.AddSingleton(options);
+            services.AddSingleton(keepAliveStrategy);
             AddCommonDependencies(services);
 
             return services;
@@ -31,10 +35,8 @@ namespace Trakx.CryptoCompare.ApiClient
         private static void AddCommonDependencies(IServiceCollection services)
         {
             services.AddSingleton<ICryptoCompareClient, CryptoCompareClient>();
-            services.AddTransient<IClientWebsocket, ResilientClientWebsocket>();
-            services.AddTransient<IWebSocketStreamer, WebSocketStreamer>();
+            services.AddTransient<IWebSocketAdapter, WebSocketAdapter>();
             services.AddSingleton<ICryptoCompareWebSocketClient, CryptoCompareWebSocketClient>();
-            services.AddSingleton<ResilientClientWebsocket>();
         }
     }
 }

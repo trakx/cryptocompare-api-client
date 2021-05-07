@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
+using Trakx.WebSockets;
+using Trakx.WebSockets.KeepAlivePolicies;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,8 +19,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
     public class WebSocketClientTests
     {
         private readonly CryptoCompareApiConfiguration _apiConfiguration;
-        private readonly IClientWebsocket _innerClient;
-        private readonly IWebSocketStreamer _webSocketStreamer;
+        private readonly IWebSocketAdapter _innerClient;
         private readonly CryptoCompareWebSocketClient _webSocketClient;
 
         public WebSocketClientTests(ITestOutputHelper output)
@@ -28,10 +29,11 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
                 WebSocketBaseUrl = "wss://hello",
                 ApiKey = "abcdefg"
             };
-            _innerClient = Substitute.For<IClientWebsocket>();
-            _webSocketStreamer = Substitute.For<IWebSocketStreamer>();
+            _innerClient = Substitute.For<IWebSocketAdapter>();
 
-            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, Options.Create(_apiConfiguration), _webSocketStreamer);
+            _webSocketClient = new CryptoCompareWebSocketClient(_innerClient, new NoPolicy(), 
+                Substitute.For<ICryptoCompareWebSocketStreamer>(),
+                Options.Create(_apiConfiguration));
         }
 
         [Fact]
@@ -80,11 +82,11 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
             var rawMessage = "message";
             SetupFakeMessageReception(rawMessage);
             await _webSocketClient.Connect();
-            while (!_webSocketClient.WebSocketStreamer.ReceivedCalls().Any())
+            while (!_webSocketClient.Streamer.ReceivedCalls().Any())
             {
                 await Task.Delay(10);
             }
-            _webSocketStreamer.Received(1).PublishInboundMessageOnStream(rawMessage);
+            _webSocketClient.Streamer.Received(1).PublishInboundMessageOnStream(rawMessage);
         }
 
         [Fact]
@@ -95,7 +97,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
             await _webSocketClient.Connect();
 
 #pragma warning disable 8625
-            _webSocketStreamer.DidNotReceiveWithAnyArgs().PublishInboundMessageOnStream(default);
+            _webSocketClient.Streamer.DidNotReceiveWithAnyArgs().PublishInboundMessageOnStream(default);
 #pragma warning restore 8625
         }
 
@@ -108,7 +110,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
 
             await _webSocketClient.Connect();
 
-            while (!_webSocketClient.WebSocketStreamer.ReceivedCalls().Any())
+            while (!_webSocketClient.Streamer.ReceivedCalls().Any())
             {
                 await Task.Delay(10);
             }

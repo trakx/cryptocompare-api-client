@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Trakx.CryptoCompare.ApiClient.WebSocket;
+using Trakx.WebSockets;
+using Trakx.WebSockets.KeepAlivePolicies;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
@@ -12,10 +13,11 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
             var configuration = new CryptoCompareApiConfiguration { ApiKey = "" };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddCryptoCompareClient(configuration);
+            serviceCollection.AddCryptoCompareClient(configuration, new NoPolicy());
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var socketStreamer = serviceProvider.GetRequiredService<IWebSocketStreamer>();
+            var webSocketClientAdapter = serviceProvider.GetRequiredService<IWebSocketAdapter>();
+            var keepAliveStrategy = serviceProvider.GetRequiredService<IKeepAlivePolicy>();
         }
     }
 }

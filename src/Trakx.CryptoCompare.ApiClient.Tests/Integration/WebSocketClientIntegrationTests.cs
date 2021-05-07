@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound;
+using Trakx.WebSockets;
+using Trakx.WebSockets.KeepAlivePolicies;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,13 +27,14 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
         public WebSocketClientIntegrationTests(ITestOutputHelper output)
         {
             _output = output;
-            var streamer = new WebSocketStreamer();
-            var apiDetailsProvider = new CryptoCompareApiConfiguration {ApiKey = new Secrets().ApiKey};
-            var clientWebSocket = new ResilientClientWebsocket();
-            _client = new CryptoCompareWebSocketClient(clientWebSocket, Options.Create(apiDetailsProvider), streamer);
+            var apiDetailsProvider = new CryptoCompareApiConfiguration { ApiKey = new Secrets().ApiKey };
+            var clientWebSocket = new WebSocketAdapter();
+            _client = new CryptoCompareWebSocketClient(clientWebSocket,
+                new NoPolicy(), new CryptoCompareWebSocketStreamer(), 
+                Options.Create(apiDetailsProvider));
         }
 
-        [Fact(Timeout = 10000)]
+        [Fact]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Trade_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -40,7 +43,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<Trade>(btcUsdSubscription);
         }
 
-        [Fact(Timeout = 10000)]
+        [Fact]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Ticker_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -49,7 +52,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<Ticker>(btcUsdSubscription);
         }
 
-        [Fact(Timeout = 10000)]
+        [Fact]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_AggregateIndice_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -58,7 +61,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             await RunTestForSubscriptionType<AggregateIndex>(btcUsdSubscription);
         }
 
-        [Fact(Timeout = 10000)]
+        [Fact]
 #pragma warning disable S2699 // Tests should include assertions
         public async Task WebSocketClient_should_receive_Ohlc_updates()
 #pragma warning restore S2699 // Tests should include assertions
@@ -70,11 +73,11 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
         private async Task RunTestForSubscriptionType<T>(ICryptoCompareSubscription subscription)
         {
             await _client.Connect();
-            _client.State.Should().Be(WebSocketState.Open);
+            _client.WebSocket.State.Should().Be(WebSocketState.Open);
 
             var messagesReceived = new List<InboundMessageBase>();
 
-            using var inboundMessageStream = _client.WebSocketStreamer.AllInboundMessagesStream
+            using var inboundMessageStream = _client.Streamer.AllInboundMessagesStream
                 .SubscribeOn(Scheduler.Default)
                 .Take(50)
                 .Subscribe(m =>
@@ -92,16 +95,16 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
             messagesReceived.OfType<T>().Count().Should().BeGreaterOrEqualTo(1);
             messagesReceived.OfType<SubscribeComplete>().Count().Should().BeGreaterOrEqualTo(1);
             messagesReceived.OfType<LoadComplete>().Count().Should().BeGreaterOrEqualTo(1);
-            
+
             await _client.RemoveSubscriptions(subscription).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(1000));
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
 
             messagesReceived.Count.Should().BeGreaterOrEqualTo(5);
             messagesReceived.OfType<SubscribeComplete>().Count().Should().BeGreaterOrEqualTo(1);
             messagesReceived.OfType<LoadComplete>().Count().Should().BeGreaterOrEqualTo(1);
 
             await _client.DisposeAsync();
-            _client.State.Should().Be(WebSocketState.Closed);
+            _client.WebSocket.State.Should().Be(WebSocketState.Closed);
         }
 
         #region IDisposable
