@@ -36,7 +36,7 @@ namespace Trakx.WebSockets.Tests.Unit
             await Client.Connect();
             AdvanceTime(_maxDuration.Add(TimeSpan.FromSeconds(1)).Ticks);
             await FlushData();
-            await Task.Delay(150);
+            await Task.Delay(150).ConfigureAwait(false);
             await Client.WebSocket.Received(1).RecycleConnectionAsync(Arg.Any<CancellationToken>());
             Client.WebSocket.State.Returns(WebSocketState.Closed);
         }

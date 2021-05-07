@@ -10,7 +10,7 @@ using Trakx.Utils.DateTimeHelpers;
 
 namespace Trakx.WebSockets.KeepAlivePolicies
 {
-    public class PingPongPolicy : IKeepAlivePolicy
+    public class PingPongPolicy : IKeepAlivePolicy, IDisposable
     {
 
         private readonly IScheduler _scheduler;
@@ -19,7 +19,7 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         private readonly string _expectedPongMessage;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private IDisposable _subjectSubscription;
+        private IDisposable _subscription;
         private DateTime? _lastPongDateTime;
 
         public PingPongPolicy(string pingMessage,
@@ -83,12 +83,12 @@ namespace Trakx.WebSockets.KeepAlivePolicies
                     }
                     return Task.CompletedTask;
                 });
-            _subjectSubscription = stream.Subscribe(_ => { });
+            _subscription = stream.Subscribe(_ => { });
         }
 
         public void Dispose()
         {
-            _subjectSubscription?.Dispose();
+            _subscription?.Dispose();
         }
 
     }

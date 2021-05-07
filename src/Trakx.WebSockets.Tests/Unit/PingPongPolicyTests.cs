@@ -41,7 +41,7 @@ namespace Trakx.WebSockets.Tests.Unit
             {
                 await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
                 AdvanceTime(Policy.ExpectedPongInterval.Ticks - 5);
-                await Task.Delay(150);
+                await Task.Delay(150).ConfigureAwait(false);
                 return 0;
             });
             await Client.WebSocket.DidNotReceive().RecycleConnectionAsync(Arg.Any<CancellationToken>());
@@ -63,7 +63,7 @@ namespace Trakx.WebSockets.Tests.Unit
             await Client.WebSocket.Received(1).PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
 
             AdvanceTime(Policy.ExpectedPongInterval.Ticks);
-            await Task.Delay(150);
+            await Task.Delay(150).ConfigureAwait(false);
             await Client.WebSocket.Received(1).RecycleConnectionAsync(Arg.Any<CancellationToken>());
 
             Client.WebSocket.State.Returns(WebSocketState.Closed);
