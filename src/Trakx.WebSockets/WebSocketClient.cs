@@ -51,7 +51,7 @@ namespace Trakx.WebSockets
                 while (WebSocket.State == WebSocketState.Open && !_cancellationTokenSource.IsCancellationRequested)
                 {
                     var buffer = new ArraySegment<byte>(new byte[4096]);
-                    var receiveResult = await ReceiveAsyncWithStrategy(async () => await WebSocket.ReceiveAsync(buffer, cancellationToken)).ConfigureAwait(false);
+                    var receiveResult = await ReceiveAsyncUsingKeepAlivePolicy(async () => await WebSocket.ReceiveAsync(buffer, cancellationToken)).ConfigureAwait(false);
                     if (receiveResult.MessageType == WebSocketMessageType.Close) break;
                     var msgBytes = buffer.Skip(buffer.Offset).Take(receiveResult.Count).ToArray();
                     var result = Encoding.UTF8.GetString(msgBytes);
@@ -62,7 +62,7 @@ namespace Trakx.WebSockets
             _logger.Information("Listening to incoming messages");
         }
 
-        private async Task<WebSocketReceiveResult> ReceiveAsyncWithStrategy(Func<Task<WebSocketReceiveResult>> func)
+        private async Task<WebSocketReceiveResult> ReceiveAsyncUsingKeepAlivePolicy(Func<Task<WebSocketReceiveResult>> func)
         {
             while (true)
             {

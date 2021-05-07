@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Trakx.Utils.DateTimeHelpers;
 using Trakx.WebSockets.KeepAlivePolicies;
 using Trakx.WebSockets.Tests.Unit.DummyClient.Messages;
 using Xunit;

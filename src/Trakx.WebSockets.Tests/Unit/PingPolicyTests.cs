@@ -1,6 +1,11 @@
 using System;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Trakx.WebSockets.KeepAlivePolicies;
 using Trakx.WebSockets.Tests.Unit.DummyClient.Messages;
@@ -12,25 +17,36 @@ namespace Trakx.WebSockets.Tests.Unit
     public class PingPolicyTests : KeepAlivePolicyTestBase
     {
 
-        public PingPolicyTests(ITestOutputHelper output) : base(output)
+        private readonly TestScheduler _testScheduler;
+        private readonly TimeSpan _keepAliveInterval;
+        private readonly string _pingMessage;
+
+        public PingPolicyTests(ITestOutputHelper output)
+            : base(output)
         {
-            ConfigureKeepAlivePolicy(new PingPolicy());
+            _pingMessage = "ping server";
+            _keepAliveInterval = TimeSpan.FromMinutes(3);
+            _testScheduler = new TestScheduler();
+            PingPolicy policy = new PingPolicy(_keepAliveInterval, _pingMessage, _testScheduler);
+            ConfigureKeepAlivePolicy(policy);
         }
 
         [Fact]
-        public async Task ApplyStrategy_should_send_ping_requests_to_the_server_every_x_time()
+        public async Task ApplyStrategy_should_ping_the_server_when_keep_alive_interval_elapses()
         {
-            DateTimeProvider.UtcNow.Returns(DateTime.UtcNow);
-            SimulateWebSocketResponse(new PriceChangedMessage
-            {
-                Symbol = "abc",
-                Price = (decimal)1.99,
-                Timestamp = DateTime.UtcNow,
-                Type = PriceChangedMessage.TypeValue
-            });
             await Client.Connect();
-            await FlushData();
-            Client.Streamer.Received().PublishInboundMessageOnStream(Arg.Any<string>());
+            _testScheduler.AdvanceTo(_keepAliveInterval.Ticks + 1);
+            await Client.WebSocket.Received(1).SendAsync(Arg.Any<ReadOnlyMemory<byte>>(), WebSocketMessageType.Text, 
+                true, Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task ApplyStrategy_should_not_ping_the_server_if_keep_alive_interval_was_not_elapsed()
+        {
+            await Client.Connect();
+            _testScheduler.AdvanceTo(_keepAliveInterval.Ticks - 50);
+            await Client.WebSocket.DidNotReceive().SendAsync(Arg.Any<ReadOnlyMemory<byte>>(), WebSocketMessageType.Text,
+                true, Arg.Any<CancellationToken>());
         }
 
     }

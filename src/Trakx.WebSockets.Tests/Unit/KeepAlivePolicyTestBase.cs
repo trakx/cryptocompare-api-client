@@ -4,14 +4,12 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Reactive.Testing;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Trakx.Utils.DateTimeHelpers;
 using Trakx.WebSockets.KeepAlivePolicies;
 using Trakx.WebSockets.Tests.Unit.DummyClient;
 using Trakx.WebSockets.Tests.Unit.DummyClient.Messages;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace Trakx.WebSockets.Tests.Unit
