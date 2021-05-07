@@ -15,7 +15,7 @@ namespace Trakx.WebSockets
         where TStreamer : IWebSocketStreamer<TBaseMessage>
     {
 
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+        private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private readonly IKeepAlivePolicy _keepAlivePolicy;
         private readonly string _baseUrl;
         private Task? _listenToWebSocketTask;
@@ -36,10 +36,10 @@ namespace Trakx.WebSockets
 
         public async Task Connect()
         {
-            Logger.Information("Opening Wrapped websocket client");
+            _logger.Information("Opening Wrapped websocket client");
             if (WebSocket.State != WebSocketState.Open)
                 await WebSocket.ConnectAsync(new Uri(_baseUrl), _cancellationTokenSource.Token).ConfigureAwait(false);
-            Logger.Information("Wrapped websocket state {0}", WebSocket.State);
+            _logger.Information("Wrapped websocket state {0}", WebSocket.State);
             await StartListening(_cancellationTokenSource.Token).ConfigureAwait(false);
             _keepAlivePolicy.ApplyStrategy(this);
         }
@@ -51,7 +51,7 @@ namespace Trakx.WebSockets
                 while (WebSocket.State == WebSocketState.Open && !_cancellationTokenSource.IsCancellationRequested)
                 {
                     var buffer = new ArraySegment<byte>(new byte[4096]);
-                    var receiveResult = await ReceiveAsyncWithStrategy(async () => await WebSocket.ReceiveAsync(buffer, cancellationToken));
+                    var receiveResult = await ReceiveAsyncWithStrategy(async () => await WebSocket.ReceiveAsync(buffer, cancellationToken)).ConfigureAwait(false);
                     if (receiveResult.MessageType == WebSocketMessageType.Close) break;
                     var msgBytes = buffer.Skip(buffer.Offset).Take(receiveResult.Count).ToArray();
                     var result = Encoding.UTF8.GetString(msgBytes);
@@ -59,7 +59,7 @@ namespace Trakx.WebSockets
                     if (!string.IsNullOrWhiteSpace(result)) Streamer.PublishInboundMessageOnStream(result);
                 }
             }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default).ConfigureAwait(false);
-            Logger.Information("Listening to incoming messages");
+            _logger.Information("Listening to incoming messages");
         }
 
         private async Task<WebSocketReceiveResult> ReceiveAsyncWithStrategy(Func<Task<WebSocketReceiveResult>> func)
@@ -72,7 +72,7 @@ namespace Trakx.WebSockets
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, $"Failed to receive data from {_baseUrl}");
+                    _logger.Error(e, $"Failed to receive data from {_baseUrl}");
                     if (!_keepAlivePolicy.TryReconnectWhenExceptionHappens) throw;
                     else await TryReconnect().ConfigureAwait(false);
                 }
@@ -81,11 +81,11 @@ namespace Trakx.WebSockets
 
         public async Task Disconnect()
         {
-            Logger.Information("Closing CryptoCompare websocket");
+            _logger.Information("Closing CryptoCompare websocket");
             await WebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure,
                 "CryptoCompare WebClient getting disposed.",
                 _cancellationTokenSource.Token);
-            Logger.Information("Closed CryptoCompare websocket");
+            _logger.Information("Closed CryptoCompare websocket");
         }
 
         private async Task StopListening()
@@ -94,7 +94,7 @@ namespace Trakx.WebSockets
             {
                 await Task.Delay(100, _cancellationTokenSource.Token).ConfigureAwait(false);
             }
-            Logger.Information("CryptoCompare websocket state {0}", WebSocket.State);
+            _logger.Information("CryptoCompare websocket state {0}", WebSocket.State);
         }
 
         public IWebSocketAdapter WebSocket { get; }

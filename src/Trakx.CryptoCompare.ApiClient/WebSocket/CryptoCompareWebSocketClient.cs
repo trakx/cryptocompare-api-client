@@ -52,6 +52,10 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
 
         protected override void Dispose(bool disposing)
         {
+            if (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
+            }
             _cancellationTokenSource.Dispose();
         }
 
