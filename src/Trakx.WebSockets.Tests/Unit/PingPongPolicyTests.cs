@@ -48,7 +48,7 @@ namespace Trakx.WebSockets.Tests.Unit
                 SimulateRawResponse(Policy.ExpectedPongMessage);
                 AdvanceTime(Policy.PongTimeout.Add(TimeSpan.FromSeconds(-2)).Ticks);
 
-                while (lastPongTime == Policy.LastPongDateTime) { await Task.Delay(5); }
+                while (lastPongTime == Policy.LastPongDateTime) { await Task.Delay(5).ConfigureAwait(false); }
 
                 await Client.WebSocket.DidNotReceive().RecycleConnectionAsync(Arg.Any<CancellationToken>());
                 await Client.WebSocket.Received().PingServer(Policy.PingMessage, Arg.Any<CancellationToken>());
