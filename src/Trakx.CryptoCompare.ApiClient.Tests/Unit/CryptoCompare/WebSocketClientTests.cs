@@ -84,7 +84,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
             await _webSocketClient.Connect();
             while (!_webSocketClient.Streamer.ReceivedCalls().Any())
             {
-                await Task.Delay(10);
+                await Task.Delay(10).ConfigureAwait(false);
             }
             _webSocketClient.Streamer.Received(1).PublishInboundMessageOnStream(rawMessage);
         }
@@ -112,7 +112,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.CryptoCompare
 
             while (!_webSocketClient.Streamer.ReceivedCalls().Any())
             {
-                await Task.Delay(10);
+                await Task.Delay(10).ConfigureAwait(false);
             }
 
             await _webSocketClient.DisposeAsync();

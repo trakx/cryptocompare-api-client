@@ -88,7 +88,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration
 
 
             await _client.AddSubscriptions(subscription).ConfigureAwait(false);
-            await Task.Delay(TimeSpan.FromMilliseconds(1000));
+            await Task.Delay(TimeSpan.FromMilliseconds(1000)).ConfigureAwait(false);
 
             messagesReceived.Count.Should().BeGreaterOrEqualTo(3);
 

@@ -10,7 +10,7 @@ namespace Trakx.WebSockets
     public class WebSocketAdapter : IWebSocketAdapter
     {
 
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+        private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private ClientWebSocket _client = new();
         private Uri? _uri;
 
@@ -93,7 +93,7 @@ namespace Trakx.WebSockets
         {
             try
             {
-                Logger.Information($"Attempting to reconnect to '{_uri}'...");
+                _logger.Information($"Attempting to reconnect to '{_uri}'...");
                 _client.Dispose();
                 _client = new ClientWebSocket();
                 await _client.ConnectAsync(_uri!, cancellationToken).ConfigureAwait(false);

@@ -12,11 +12,11 @@ namespace Trakx.CryptoCompare.ApiClient
     {
         public static IServiceCollection AddCryptoCompareClient(
             this IServiceCollection services, CryptoCompareApiConfiguration configuration, 
-            IKeepAlivePolicy keepAliveStrategy)
+            IKeepAlivePolicy keepAlivePolicy)
         {
             var options = Options.Create(configuration);
             services.AddSingleton(options);
-            services.AddSingleton(keepAliveStrategy);
+            services.AddSingleton(keepAlivePolicy);
             AddCommonDependencies(services);
 
             return services;

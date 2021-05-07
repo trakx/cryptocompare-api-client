@@ -31,7 +31,7 @@ namespace Trakx.WebSockets.Tests.Unit
             await Client.Connect();
             while (!Client.Streamer.ReceivedCalls().Any())
             {
-                await Task.Delay(10);
+                await Task.Delay(10).ConfigureAwait(false);
             }
 
             Client.Streamer.Received().PublishInboundMessageOnStream(Arg.Any<string>());

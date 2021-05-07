@@ -41,10 +41,9 @@ namespace Trakx.WebSockets.Tests.Unit
             _testScheduler.AdvanceTo(_maxDuration.Ticks + 1);
             while (!Client.Streamer.ReceivedCalls().Any())
             {
-                await Task.Delay(10);
+                await Task.Delay(10).ConfigureAwait(false);
             }
-            // todo: to fix this issue
-            //await Client.WebSocket.Received().RecycleConnectionAsync(Arg.Any<CancellationToken>());
+            // todo: to fix issue - await Client.WebSocket.Received().RecycleConnectionAsync(Arg.Any<CancellationToken>());
         }
 
     }

@@ -16,8 +16,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
             serviceCollection.AddCryptoCompareClient(configuration, new NoPolicy());
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var webSocketClientAdapter = serviceProvider.GetRequiredService<IWebSocketAdapter>();
-            var keepAliveStrategy = serviceProvider.GetRequiredService<IKeepAlivePolicy>();
+            serviceProvider.GetRequiredService<IWebSocketAdapter>();
+            serviceProvider.GetRequiredService<IKeepAlivePolicy>();
         }
     }
 }

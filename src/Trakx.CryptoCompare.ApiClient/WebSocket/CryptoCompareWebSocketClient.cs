@@ -18,7 +18,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+        private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
         public CryptoCompareWebSocketClient(IWebSocketAdapter webSocket,
             IKeepAlivePolicy strategy, ICryptoCompareWebSocketStreamer streamer,
@@ -39,7 +39,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "Failed to add subscriptions.");
+                _logger.Error(exception, "Failed to add subscriptions.");
             }
         }
 
@@ -48,6 +48,11 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket
             var message = new RemoveSubscriptionMessage(subscriptions);
             await WebSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message)),
                 WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _cancellationTokenSource.Dispose();
         }
 
     }

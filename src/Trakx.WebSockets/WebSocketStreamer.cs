@@ -11,10 +11,10 @@ namespace Trakx.WebSockets
         where TBaseMessage : IBaseInboundMessage
     {
 
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
+        private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
 
 
-        public WebSocketStreamer()
+        protected WebSocketStreamer()
         {
             InboundMessages = new ReplaySubject<TBaseMessage>(1);
         }
@@ -23,15 +23,15 @@ namespace Trakx.WebSockets
         {
             try
             {
-                Logger.Verbose("Received WebSocketInboundMessage {0}{1}", Environment.NewLine, rawMessage);
+                _logger.Verbose("Received WebSocketInboundMessage {0}{1}", Environment.NewLine, rawMessage);
                 var message = JsonSerializer.Deserialize<TBaseMessage>(rawMessage);
                 var type = GetMessageType(message!.Type);
-                if (type == null) return; ;
+                if (type == null) return;
                 InboundMessages.OnNext((TBaseMessage)JsonSerializer.Deserialize(rawMessage, type)!);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "Failed to publish {0}", rawMessage);
+                _logger.Error(exception, "Failed to publish {0}", rawMessage);
             }
         }
 

@@ -22,7 +22,7 @@ namespace Trakx.WebSockets
         private readonly CancellationTokenSource _cancellationTokenSource;
 
 
-        public WebSocketClient(IWebSocketAdapter websocket, string baseUrl,
+        protected WebSocketClient(IWebSocketAdapter websocket, string baseUrl,
             IKeepAlivePolicy keepAlivePolicy, TStreamer streamer)
         {
             WebSocket = websocket;
@@ -74,7 +74,7 @@ namespace Trakx.WebSockets
                 {
                     Logger.Error(e, $"Failed to receive data from {_baseUrl}");
                     if (!_keepAlivePolicy.TryReconnectWhenExceptionHappens) throw;
-                    else await TryReconnect();
+                    else await TryReconnect().ConfigureAwait(false);
                 }
             }
         }
