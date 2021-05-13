@@ -22,13 +22,12 @@ namespace Trakx.WebSockets.Tests.Unit
         [Fact]
         public async Task ApplyStrategy_should_not_do_anything_if_websocket_server_is_not_responding_for_a_long_time()
         {
-            SimulateJsonResponse(new PriceChangedMessage
+            SimulateJsonResponse(new PriceChangedMessage("abc")
             {
-                Symbol = "abc",
                 Price = (decimal)1.99,
-                Timestamp = DateTime.UtcNow,
-                Type = PriceChangedMessage.TypeValue
+                Timestamp = DateTime.UtcNow
             });
+
             Client.WebSocket.State.Returns(WebSocketState.Open);
             await Client.Connect();
             await FlushData();

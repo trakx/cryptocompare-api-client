@@ -29,10 +29,10 @@ namespace Trakx.WebSockets.Tests.Unit.DummyClient
             };
         }
 
-        public override IObservable<TMessageType> GetStream<TMessageType>(string topicName)
+        public override IObservable<TMessageType>? GetStream<TMessageType>(string name)
         {
             var streams = GetStreams();
-            return streams.ContainsKey(topicName) ? streams[topicName].Cast<TMessageType>() : null;
+            return streams.ContainsKey(name) ? streams[name].Cast<TMessageType>() : null;
         }
 
     }

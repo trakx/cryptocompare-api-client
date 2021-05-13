@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Trakx.CryptoCompare.ApiClient.Rest.Core;
-using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
 using Trakx.CryptoCompare.ApiClient.Rest.Models.Responses;
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Clients

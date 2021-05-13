@@ -16,7 +16,7 @@ namespace Trakx.WebSockets
         WebSocketCloseStatus? CloseStatus { get; }
         /// <summary>Gets a description of the reason why the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance was closed.</summary>
         /// <returns>The description of the reason why the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance was closed.</returns>
-        string CloseStatusDescription { get; }
+        string? CloseStatusDescription { get; }
         /// <summary>Gets the WebSocket options for the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance.</summary>
         /// <returns>The WebSocket options for the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance.</returns>
         ClientWebSocketOptions Options { get; }
@@ -25,7 +25,7 @@ namespace Trakx.WebSockets
         WebSocketState State { get; }
         /// <summary>Gets the supported WebSocket sub-protocol for the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance.</summary>
         /// <returns>The supported WebSocket sub-protocol.</returns>
-        string SubProtocol { get; }
+        string? SubProtocol { get; }
         /// <summary>Aborts the connection and cancels any pending IO operations.</summary>
         void Abort();
         /// <summary>Close the <see cref="T:System.Net.WebSockets.ClientWebSocket" /> instance as an asynchronous operation.</summary>

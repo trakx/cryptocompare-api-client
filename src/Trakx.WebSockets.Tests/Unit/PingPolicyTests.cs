@@ -1,10 +1,7 @@
 using System;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Trakx.Utils.DateTimeHelpers;
 using Trakx.WebSockets.KeepAlivePolicies;
 using Xunit;
 using Xunit.Abstractions;

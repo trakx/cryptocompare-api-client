@@ -17,12 +17,12 @@ namespace Trakx.WebSockets.KeepAlivePolicies
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         private DateTime? _lastPingDateTime;
-        private IDisposable _subjectSubscription;
+        private IDisposable? _subjectSubscription;
 
         public PingPolicy(TimeSpan pingInterval, 
             string pingMessage = "ping",
-            IDateTimeProvider dateTimeProvider = default,
-            IScheduler scheduler = default)
+            IDateTimeProvider? dateTimeProvider = default,
+            IScheduler? scheduler = default)
         {
             _pingInterval = pingInterval;
             _pingMessage = pingMessage;
@@ -61,10 +61,17 @@ namespace Trakx.WebSockets.KeepAlivePolicies
             _subjectSubscription = stream.Subscribe(_ => { });
         }
 
-        public virtual void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (!disposing) return;
+            _cancellationTokenSource.Dispose();
             _subjectSubscription?.Dispose();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

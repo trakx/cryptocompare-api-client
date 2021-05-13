@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,6 @@ namespace Trakx.WebSockets.Tests.Unit
             SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
-                Type = HeartBeatMessage.TypeValue
             });
             Client.WebSocket.State.Returns(WebSocketState.Open);
 
@@ -64,7 +62,6 @@ namespace Trakx.WebSockets.Tests.Unit
             SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
-                Type = HeartBeatMessage.TypeValue
             });
             Client.WebSocket.State.Returns(WebSocketState.Open);
 

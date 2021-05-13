@@ -41,7 +41,7 @@ namespace Trakx.WebSockets
 
         public abstract Dictionary<string, IObservable<TBaseMessage>> GetStreams();
 
-        public abstract IObservable<TMessageType> GetStream<TMessageType>(string topicName);
+        public abstract IObservable<TMessageType> GetStream<TMessageType>(string name);
 
     }
 }

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Trakx.WebSockets.Tests.Unit.DummyClient.Messages
+﻿namespace Trakx.WebSockets.Tests.Unit.DummyClient.Messages
 {
-    public class BaseInboundMessage : IBaseInboundMessage
+    public abstract class BaseInboundMessage : IBaseInboundMessage
     {
+        protected BaseInboundMessage(string type)
+        {
+            Type = type;
+        }
+
         public string Type { get; }
     }
 }

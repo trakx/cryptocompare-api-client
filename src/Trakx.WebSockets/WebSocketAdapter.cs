@@ -13,7 +13,7 @@ namespace Trakx.WebSockets
 
         private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private ClientWebSocket _client = new();
-        private Uri _uri;
+        private Uri? _uri;
 
         #region Implementation of IClientWebsocket
 
@@ -21,7 +21,7 @@ namespace Trakx.WebSockets
         public WebSocketCloseStatus? CloseStatus => _client.CloseStatus;
 
         /// <inheritdoc />
-        public string CloseStatusDescription => _client.CloseStatusDescription;
+        public string? CloseStatusDescription => _client.CloseStatusDescription;
 
         /// <inheritdoc />
         public ClientWebSocketOptions Options => _client.Options;
@@ -30,7 +30,7 @@ namespace Trakx.WebSockets
         public WebSocketState State => _client.State;
 
         /// <inheritdoc />
-        public string SubProtocol => _client.SubProtocol;
+        public string? SubProtocol => _client.SubProtocol;
 
         /// <inheritdoc />
         public void Abort()
@@ -115,14 +115,16 @@ namespace Trakx.WebSockets
 
         #endregion
 
-        #region IDisposable
-
-        /// <inheritdoc />
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (!disposing) return;
             _client.Dispose();
         }
 
-        #endregion
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

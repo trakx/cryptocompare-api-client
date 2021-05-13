@@ -31,7 +31,6 @@ namespace Trakx.WebSockets.Tests.Unit
             SimulateJsonResponse(new HeartBeatMessage
             {
                 Timestamp = DateTime.UtcNow,
-                Type = HeartBeatMessage.TypeValue
             });
             await Client.Connect();
             AdvanceTime(_maxDuration.Add(TimeSpan.FromSeconds(1)).Ticks);

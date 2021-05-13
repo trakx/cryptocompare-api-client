@@ -19,14 +19,14 @@ namespace Trakx.WebSockets
         private readonly ILogger _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod()!.DeclaringType);
         private readonly IKeepAlivePolicy _keepAlivePolicy;
         private readonly string _baseUrl;
-        private Task _listenToWebSocketTask;
+        private Task? _listenToWebSocketTask;
         private DateTime? _lastConnectionRecycleDateTime;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         protected WebSocketClient(IWebSocketAdapter websocket, string baseUrl,
             IKeepAlivePolicy keepAlivePolicy, TStreamer streamer, 
-            IDateTimeProvider dateTimeProvider = default)
+            IDateTimeProvider? dateTimeProvider = default)
         {
             WebSocket = websocket;
             Streamer = streamer;
