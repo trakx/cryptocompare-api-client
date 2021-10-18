@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
 using Trakx.Websocket;
@@ -19,7 +20,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
             serviceCollection.AddCryptoCompareClient(configuration);
             serviceCollection.AddLogging();
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var socketStreamer = serviceProvider.GetRequiredService<IClientWebsocketRedirectRegistry<InboundMessageBase, CryptoCompareWebsocketSubscription>>();
+            serviceProvider.GetRequiredService<IClientWebsocketRedirectRegistry<InboundMessageBase, CryptoCompareWebsocketSubscription>>()
+                .Should().NotBeNull();
         }
     }
 }
