@@ -51,6 +51,10 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Outbound
         }
     }
 
+    public interface ICryptoCompareSubscription
+    {
+    }
+
     public class CryptoCompareSubscriptionListConverter : JsonConverter<IReadOnlyList<ICryptoCompareSubscription>>
     {
         private readonly CryptoCompareSubscriptionConverter _itemConverter;

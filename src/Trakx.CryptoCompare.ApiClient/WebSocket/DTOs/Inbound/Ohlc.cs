@@ -6,7 +6,7 @@ namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
     public class Ohlc : InboundMessageBase
     {
 #nullable disable
-        public const string TypeValue = "24";
+        internal const string TypeValue = "24";
         [JsonPropertyName("MARKET")] public string Market { get; set; }
         [JsonPropertyName("FROMSYMBOL")] public string FromSymbol { get; set; }
         [JsonPropertyName("TOSYMBOL")] public string ToSymbol { get; set; }
