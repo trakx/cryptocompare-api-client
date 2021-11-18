@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
 {
     public class InboundMessageBase
     {

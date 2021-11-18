@@ -5,13 +5,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
 {
     public class Welcome : InboundMessageBase
     {
 #nullable disable
-        internal const string TypeValue = "20";
-
         [JsonPropertyName("TYPE")]
         public string Type { get; set; }
 

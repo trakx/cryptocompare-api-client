@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
 {
     public class HeartBeat : InboundMessageBase
     {
-        internal const string TypeValue = "999";
         [JsonPropertyName("MESSAGE")] public string Message { get; set; }
         [JsonPropertyName("TIMEMS")] public ulong TimeMs { get; set; }
     }

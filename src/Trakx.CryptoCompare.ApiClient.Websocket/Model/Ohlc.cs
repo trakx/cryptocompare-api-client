@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using Trakx.Utils.Serialization.Converters;
 
-namespace Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
 {
     public class Ohlc : InboundMessageBase
     {
 #nullable disable
-        internal const string TypeValue = "24";
         [JsonPropertyName("MARKET")] public string Market { get; set; }
         [JsonPropertyName("FROMSYMBOL")] public string FromSymbol { get; set; }
         [JsonPropertyName("TOSYMBOL")] public string ToSymbol { get; set; }
