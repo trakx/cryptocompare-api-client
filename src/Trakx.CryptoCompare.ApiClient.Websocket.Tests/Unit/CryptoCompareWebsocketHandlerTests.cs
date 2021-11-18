@@ -14,7 +14,7 @@ using Trakx.Websockets.Testing;
 using Websocket.Client;
 using Xunit;
 
-namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit
 {
     public class CryptoCompareWebsocketHandlerTests
     {
