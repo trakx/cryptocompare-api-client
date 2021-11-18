@@ -45,7 +45,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket
 
         protected override object? DeserializeClientSocketIncoming(string topic, IncomingMessage m)
         {
-            var typeStr = m.DeserializedMessage.Type;
+            var typeStr = m.DeserializedMessage?.Type ?? null;
             if (typeStr != null && MessageTypesByTopics.ContainsKey(typeStr))
             {
                 var type = MessageTypesByTopics[typeStr];
@@ -59,14 +59,14 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket
         protected override async Task<bool> AddInternalAsync(TopicSubscription subscription)
         {
             var jDoc = JsonDocument.Parse(subscription.Topic);
-            JsonProperty? unsubProperties = jDoc.RootElement.EnumerateObject().Any(t => t.Name.Equals("action", StringComparison.InvariantCultureIgnoreCase) 
+            JsonProperty? unsubProperties = jDoc.RootElement.EnumerateObject().Any(t => t.Name.Equals("action", StringComparison.InvariantCultureIgnoreCase)
             && t.Value.GetString().Equals("SubRemove", StringComparison.InvariantCultureIgnoreCase)) ?
                 jDoc.RootElement.EnumerateObject().FirstOrDefault(t => t.Name == "subs")
                 : null;
             if (unsubProperties != null)
             {
                 var unsubArrayLength = unsubProperties.Value.Value.GetArrayLength();
-                for(int i = 0; i < unsubArrayLength; i++)
+                for (int i = 0; i < unsubArrayLength; i++)
                 {
                     var unsubElement = unsubProperties.Value.Value[i].GetString();
                     var toRemoveSubs = Subscriptions.Where(t => t.Topic.Contains(unsubElement, StringComparison.InvariantCultureIgnoreCase))
