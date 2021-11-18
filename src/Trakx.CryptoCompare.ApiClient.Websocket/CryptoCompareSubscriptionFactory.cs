@@ -6,7 +6,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket
 {
     public static class CryptoCompareSubscriptionFactory
     {
-        public static TopicSubscription GetTopicSubscription(SubscribeActions action, string[] subs)
+        public static TopicSubscription GetTopicSubscription(SubscribeActions action, params string[] subs)
         {
             return new TopicSubscription(JsonSerializer.Serialize(new CryptoCompareSubscription
             {
