@@ -1,9 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Trakx.CryptoCompare.ApiClient.WebSocket;
-using Trakx.CryptoCompare.ApiClient.WebSocket.DTOs.Inbound;
-using Trakx.Websocket;
-using Trakx.Websocket.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
@@ -16,12 +11,9 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
             var configuration = new CryptoCompareApiConfiguration { ApiKey = "" };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped<IClientWebsocketFactory, ClientWebsocketFactory>();
             serviceCollection.AddCryptoCompareClient(configuration);
             serviceCollection.AddLogging();
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            serviceProvider.GetRequiredService<IClientWebsocketRedirectRegistry<InboundMessageBase, CryptoCompareWebsocketSubscription>>()
-                .Should().NotBeNull();
         }
     }
 }
