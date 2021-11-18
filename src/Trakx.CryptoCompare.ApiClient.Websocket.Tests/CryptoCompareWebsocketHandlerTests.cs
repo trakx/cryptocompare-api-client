@@ -18,8 +18,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests
 {
     public class CryptoCompareWebsocketHandlerTests
     {
-        private TestWebsocketClient _testClient;
-        private CryptoCompareWebsocketHandler _websocketHandler;
+        private readonly TestWebsocketClient _testClient;
+        private readonly CryptoCompareWebsocketHandler _websocketHandler;
 
         public CryptoCompareWebsocketHandlerTests()
         {
