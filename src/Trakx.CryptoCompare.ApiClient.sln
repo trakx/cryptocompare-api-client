@@ -37,10 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.CryptoCompare.ApiClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Websocket", "Trakx.CryptoCompare.ApiClient.Websocket\Trakx.CryptoCompare.ApiClient.Websocket.csproj", "{A0FD368B-F4F2-4E0D-87A2-4866900156CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.Console", "Trakx.Console\Trakx.Console.csproj", "{A09A73D3-A193-4972-BB29-826D61F05FA2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.Websocket", "..\..\websocket\src\Trakx.Websocket\Trakx.Websocket.csproj", "{1E5C702C-7CDC-42F9-89D9-FD8F15435175}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,14 +55,6 @@ Global
 		{A0FD368B-F4F2-4E0D-87A2-4866900156CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0FD368B-F4F2-4E0D-87A2-4866900156CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0FD368B-F4F2-4E0D-87A2-4866900156CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A09A73D3-A193-4972-BB29-826D61F05FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A09A73D3-A193-4972-BB29-826D61F05FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A09A73D3-A193-4972-BB29-826D61F05FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A09A73D3-A193-4972-BB29-826D61F05FA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E5C702C-7CDC-42F9-89D9-FD8F15435175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E5C702C-7CDC-42F9-89D9-FD8F15435175}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E5C702C-7CDC-42F9-89D9-FD8F15435175}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E5C702C-7CDC-42F9-89D9-FD8F15435175}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
