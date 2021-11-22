@@ -38,6 +38,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket
             { "500", typeof(Error) },
             { "5", typeof(AggregateIndex) },
             { "11", typeof(FullVolume) },
+            { "30", typeof(TopOfOrderBook) },
             { "21", typeof(TopTierFullVolume) },
             { "8", typeof(OrderBookL2) },
             { "401", typeof(Unauthorized) }

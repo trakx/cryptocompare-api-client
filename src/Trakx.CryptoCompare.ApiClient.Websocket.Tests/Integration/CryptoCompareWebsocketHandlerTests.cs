@@ -70,21 +70,20 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         {
             var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"));
             result!.Symbol.Should().Be("BTC");
-            decimal.Parse(result.Volume).Should().BeGreaterThan(0);
+            decimal.Parse(result.Volume).Should().BeGreaterThan(0); 
         }
 
         [Fact]
         public async Task Should_be_able_to_get_oc_book()
         {
-            var result = await GetResult<OrderBookL2>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"));
-            result!.P.Should().BeGreaterThan(0);
-            result!.Q.Should().BeGreaterThan(0);
+            var result = await GetResult<TopOfOrderBook>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"));
+            result!.Type.Should().Be("30");
         }
 
         [Fact]
         public async Task Should_be_able_to_get_ohlcc_candles()
         {
-            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt"));
+            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt", "m"));
             result!.Open.Should().BeGreaterThan(0);
             result!.LastTimeStamp.Should().BeGreaterThan(0);
             result!.Market.Should().NotBeNull();
