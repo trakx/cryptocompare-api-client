@@ -26,6 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Trakx.CryptoCompare.ApiClient.Tests\Trakx.CryptoCompare.ApiClient.Tests.csproj" />
 		<ProjectReference Include="..\Trakx.CryptoCompare.ApiClient.Websocket\Trakx.CryptoCompare.ApiClient.Websocket.csproj" />
 	</ItemGroup>
 
