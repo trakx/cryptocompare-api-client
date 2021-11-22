@@ -49,19 +49,46 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             _serviceScope.Dispose();
         }
 
-        [Fact]
-        public async Task Should_be_able_to_get_full_top_tier_volume_subscriptions()
+
+        private async Task<T> GetResult<T>(string subStr) where T : InboundMessageBase
         {
             var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription
-                (SubscribeActions.SubAdd, CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"));
-            await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
-            var result = await _cryptoCompareWebsocketHandler.GetTopicMessageStream<TopTierFullVolume>(topicSub.Topic)
+                (SubscribeActions.SubAdd, subStr);
+            var resultTask = _cryptoCompareWebsocketHandler.GetTopicMessageStream<T>(topicSub.Topic)
                 .Buffer(TimeSpan.FromSeconds(5), 1)
                 .Select(t => t.FirstOrDefault())
                 .FirstOrDefaultAsync()
                 .ToTask();
+            await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
+            var result = await resultTask;
+            return result!;
+        }
+
+
+        [Fact]
+        public async Task Should_be_able_to_get_full_top_tier_volume_subscriptions()
+        {
+            var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"));
             result!.Symbol.Should().Be("BTC");
             decimal.Parse(result.Volume).Should().BeGreaterThan(0);
+        }
+
+        [Fact]
+        public async Task Should_be_able_to_get_oc_book()
+        {
+            var result = await GetResult<OrderBookL2>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("binance", "btc", "usdc"));
+            result!.P.Should().BeGreaterThan(0);
+            result!.Q.Should().BeGreaterThan(0);
+        }
+
+        [Fact]
+        public async Task Should_be_able_to_get_ohlcc_candles()
+        {
+            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("binance", "btc", "usdc"));
+            result!.Open.Should().BeGreaterThan(0);
+            result!.LastTimeStamp.Should().BeGreaterThan(0);
+            result!.Market.Should().NotBeNull();
+            result.Close.Should().BeGreaterThan(0);
         }
     }
 }
