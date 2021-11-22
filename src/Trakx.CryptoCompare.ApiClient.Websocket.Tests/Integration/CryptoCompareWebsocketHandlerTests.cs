@@ -57,7 +57,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
            
             await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
             var resultTask = _cryptoCompareWebsocketHandler.GetTopicMessageStream<T>(topicSub.Topic)
-                .Buffer(TimeSpan.FromSeconds(5), 1)
+                .Buffer(TimeSpan.FromSeconds(10), 1)
                 .Select(t => t.FirstOrDefault())
                 .FirstOrDefaultAsync()
                 .ToTask();
