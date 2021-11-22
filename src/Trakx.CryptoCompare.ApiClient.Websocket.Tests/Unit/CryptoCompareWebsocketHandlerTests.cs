@@ -65,11 +65,14 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit
                 .Select(t => t.FirstOrDefault())
                 .FirstOrDefaultAsync()
                 .ToTask();
-            var fakeMsg = JsonSerializer.Serialize(new FullVolume { Type = "11", Volume = 1, Symbol = "BTC" });
+            var fullVolumeMsg = new FullVolume { Type = "11", Volume = 1, Symbol = "BTC" };
+            var fakeMsg = JsonSerializer.Serialize(fullVolumeMsg);
             _testClient.StreamFakeMessage(ResponseMessage.TextMessage(fakeMsg));
 
             var topicMessage = await topicMessageTask;
-            topicMessage.Should().NotBeNull();
+            topicMessage!.Type.Should().Be(fullVolumeMsg.Type);
+            topicMessage!.Symbol.Should().Be(fullVolumeMsg.Symbol);
+            topicMessage!.Volume.Should().Be(fullVolumeMsg.Volume);
 
         }
     }
