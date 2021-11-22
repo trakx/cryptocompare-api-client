@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
+#pragma warning disable 8618
 namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
 {
     public class OrderBookL2 : InboundMessageBase

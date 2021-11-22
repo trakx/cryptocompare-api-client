@@ -1,12 +1,13 @@
 ﻿using Trakx.Utils.Attributes;
 
+#pragma warning disable 8618
 namespace Trakx.CryptoCompare.ApiClient.Websocket
 {
-    public class CryptoCompareWebsocketConfiguration
+    public record CryptoCompareWebsocketConfiguration
     {
-        public string Url { get; set; }
+        public string Url { get; init; }
 
         [SecretEnvironmentVariable]
-        public string ApiKey { get; set; }
+        public string ApiKey { get; init; }
     }
 }
