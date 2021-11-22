@@ -42,7 +42,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit
         }
 
         [Fact]
-        public async Task AddAsync_should_not_remove_subscription_on_sub_remove()
+        public async Task AddAsync_should_remove_subscription_on_sub_remove()
         {
             var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubAdd,
                 CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
