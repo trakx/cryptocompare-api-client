@@ -76,7 +76,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_oc_book()
         {
-            var result = await GetResult<OrderBookL2>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("binance", "btc", "usdc"));
+            var result = await GetResult<OrderBookL2>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"));
             result!.P.Should().BeGreaterThan(0);
             result!.Q.Should().BeGreaterThan(0);
         }
@@ -84,7 +84,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_ohlcc_candles()
         {
-            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("binance", "btc", "usdc"));
+            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt"));
             result!.Open.Should().BeGreaterThan(0);
             result!.LastTimeStamp.Should().BeGreaterThan(0);
             result!.Market.Should().NotBeNull();
