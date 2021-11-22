@@ -68,7 +68,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_full_top_tier_volume_subscriptions()
         {
-            var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"));
+            var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"))
+                .ConfigureAwait(false);
             result!.Symbol.Should().Be("BTC");
             decimal.Parse(result.Volume).Should().BeGreaterThan(0); 
         }
@@ -76,14 +77,16 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_oc_book()
         {
-            var result = await GetResult<TopOfOrderBook>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"));
+            var result = await GetResult<TopOfOrderBook>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"))
+                .ConfigureAwait(false);
             result!.Type.Should().Be("30");
         }
 
         [Fact]
         public async Task Should_be_able_to_get_ohlcc_candles()
         {
-            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt", "m"));
+            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt", "m"))
+                .ConfigureAwait(false);
             result!.Open.Should().BeGreaterThan(0);
             result!.LastTimeStamp.Should().BeGreaterThan(0);
             result!.Market.Should().NotBeNull();
