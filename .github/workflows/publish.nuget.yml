@@ -14,6 +14,7 @@ on:
 env:
   SOLUTION_PATH: "src/Trakx.CryptoCompare.ApiClient.sln"
   PROJECT_PATH: "src/Trakx.CryptoCompare.ApiClient/Trakx.CryptoCompare.ApiClient.csproj"
+  PROJECT_WEBSOCKET_PATH: "src/Trakx.CryptoCompare.ApiClient.Websocket/Trakx.CryptoCompare.ApiClient.Websocket.csproj"
   CryptoCompareApiConfiguration__ApiKey: ${{secrets.CRYPTOCOMPARE_API_KEY}}
 
 jobs:
@@ -71,7 +72,9 @@ jobs:
       run: dotnet test ${{env.SOLUTION_PATH}} --no-restore --verbosity normal
 
     - name: Package
-      run: dotnet pack ${{env.PROJECT_PATH}} --no-build --configuration Release --output ./nuget/ -p:PackageVersion=${{ steps.bumpSemver.outputs.new_tag }}
+      run: |
+        dotnet pack ${{env.PROJECT_PATH}} --no-build --configuration Release --output ./nuget/ -p:PackageVersion=${{ steps.bumpSemver.outputs.new_tag }}
+        dotnet pack ${{env.PROJECT_WEBSOCKET_PATH}} --no-build --configuration Release --output ./nuget/ -p:PackageVersion=${{ steps.bumpSemver.outputs.new_tag }}
 
     - name: Publish
       # https://github.com/NuGet/Home/issues/8580
