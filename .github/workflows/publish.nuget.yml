@@ -1,6 +1,6 @@
 name: Publish nuget package
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       semverIncrementLevel:
@@ -8,77 +8,88 @@ on:
         required: true
         default: 'patch'
   push:
-    branches: 
+    branches:
       - master
 
 env:
   SOLUTION_PATH: "src/Trakx.CryptoCompare.ApiClient.sln"
   PROJECT_PATH: "src/Trakx.CryptoCompare.ApiClient/Trakx.CryptoCompare.ApiClient.csproj"
+  PROJECT_WEBSOCKET_PATH: "src/Trakx.CryptoCompare.ApiClient.Websocket/Trakx.CryptoCompare.ApiClient.Websocket.csproj"
   CryptoCompareApiConfiguration__ApiKey: ${{secrets.CRYPTOCOMPARE_API_KEY}}
 
 jobs:
-  
+
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    
-    - name: Set Bump Increment Level
-      id: bumpLevel
-      run: |
-        LEVEL="${{github.event.inputs.semverIncrementLevel}}"
-        LEVEL=${LEVEL:-patch}
-        echo '::set-output name=finalLevel::'$LEVEL
-        
-    - name: checkout
-      uses: actions/checkout@v2
 
-    - name: Get next semver
-      id: bumpSemver
-      uses: anothrNick/github-tag-action@1.26.0
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        DEFAULT_BUMP: ${{steps.bumpLevel.outputs.finalLevel}}
-        DRY_RUN: true
-        WITH_V: false
-        RELEASE_BRANCHES : master
-        INITIAL_VERSION: 0.2.0
+      - name: Set compilation mode
+        id: comp-mode
+        run: |
+          DEBUGGABLE="${{github.event.inputs.debuggable}}"
+          DEBUGGABLE=${DEBUGGABLE:-true}
+          if [ [DEBUGGABLE == f*] -o [DEBUGGABLE == F*] ]; then
+            COMP_MODE=Release
+          else
+            COMP_MODE=Debug
+          fi
+          echo '::set-output name=compilationMode::'$COMP_MODE
+          echo "compilation mode set to ${{steps.comp-mode.outputs.compilationMode}}"
 
-    - name: Print bumpSemver outputs
-      run: |
-        echo "latest tag is ${{steps.bumpSemver.outputs.tag}}"
-        echo "bumping ${{steps.bumpSemver.outputs.part}} level on ${{github.ref}} gives new tag ${{steps.bumpSemver.outputs.new_tag}}"
-    
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.7.2
-      with:
-        dotnet-version: 5.0.x
-    
-    - name: Add github nuget source
-      run: dotnet nuget add source "https://nuget.pkg.github.com/trakx/index.json" --name "github" --username "trakx-bot" --password ${{secrets.TRAKX_BOT_READONLY_PAT}} --store-password-in-clear-text
+      - name: checkout
+        uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: dotnet restore ${{env.SOLUTION_PATH}}
-    
-    - name: Remove github source
-      run: dotnet nuget remove source "github"
-    
-    - name: Build
-      run: dotnet build ${{env.SOLUTION_PATH}} --configuration Release --no-restore
-    
-    - name: Test
-      run: dotnet test ${{env.SOLUTION_PATH}} --no-restore --verbosity normal
+      - name: Bump version
+        id: bumpVersion
+        uses: trakx/bump-version-action@v8
+        with:
+          semverIncrementLevel: ${{github.event.inputs.semverIncrementLevel}}
+          releaseBranches: master
+          githubToken: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Package
-      run: dotnet pack ${{env.PROJECT_PATH}} --no-build --configuration Release --output ./nuget/ -p:PackageVersion=${{ steps.bumpSemver.outputs.new_tag }}
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Publish
-      # https://github.com/NuGet/Home/issues/8580
-      run: dotnet nuget push ./nuget/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}} --source "https://nuget.pkg.github.com/trakx/index.json"
+      - name: Add github nuget source
+        run: dotnet nuget add source "https://nuget.pkg.github.com/trakx/index.json" --name "github" --username "trakx-bot" --password ${{secrets.TRAKX_BOT_READONLY_PAT}} --store-password-in-clear-text
 
-    - name: push version tag
-      uses: anothrNick/github-tag-action@1.26.0
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        CUSTOM_TAG: v${{steps.bumpSemver.outputs.new_tag}}
+      - name: Install dependencies
+        run: dotnet restore ${{env.SOLUTION_PATH}}
+
+      - name: Remove github source
+        run: dotnet nuget remove source "github"
+
+      - name: Build
+        run: |
+          dotnet build ${{env.SOLUTION_PATH}} \
+          --configuration ${{steps.comp-mode.outputs.compilationMode}} \
+          -p:Version=${{steps.bumpVersion.outputs.assemblyVersion}} \
+          -p:SourceRevisionId=${{steps.bumpVersion.outputs.productVersion}} \
+          --no-restore
+
+      - name: Test
+        run: dotnet test ${{env.SOLUTION_PATH}} --no-restore --verbosity normal
+
+      - name: Package
+        run: |
+          dotnet pack ${{env.PROJECT_PATH}} --no-build --configuration ${{ steps.comp-mode.outputs.compilationMode }} \
+            --output ./nuget/ -p:PackageVersion=${{ steps.bumpVersion.outputs.fullVersion }} --include-symbols --include-source
+          dotnet pack ${{env.PROJECT_WEBSOCKET_PATH}} --no-build --configuration ${{ steps.comp-mode.outputs.compilationMode }} \
+            --output ./nuget/ -p:PackageVersion=${{ steps.bumpVersion.outputs.fullVersion }} --include-symbols --include-source
+
+      - name: Publish
+        # https://github.com/NuGet/Home/issues/8580
+        run: |
+          ls ./nuget/*.nupkg
+          for f in ./nuget/*.symbols.nupkg; do echo "pushing $f file.." && dotnet nuget push $f --api-key ${{secrets.GITHUB_TOKEN}} \
+            --source "https://nuget.pkg.github.com/trakx/index.json"; done
+
+      - name: push version tag
+        uses: anothrNick/github-tag-action@1.38.0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          CUSTOM_TAG: v${{steps.bumpVersion.outputs.fullVersion}}

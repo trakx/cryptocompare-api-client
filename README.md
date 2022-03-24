@@ -47,6 +47,12 @@ In order to be able to run some integration tests, you should create a `.env` fi
 CryptoCompareApiConfiguration__ApiKey=********
 ```
 
+## AWS Parameters
+In order to be able to run some integration tests you should ensure that you have access to the following AWS parameters :
+```awsParams
+/Trakx/CryptoCompare/ApiClient/CryptoCompareApiConfiguration/ApiKey
+```
+
 ## Basic usage
 ````csharp
 // Using ctor

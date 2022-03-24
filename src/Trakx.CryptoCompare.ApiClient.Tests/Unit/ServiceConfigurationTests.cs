@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Trakx.CryptoCompare.ApiClient.WebSocket;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
@@ -13,9 +12,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddCryptoCompareClient(configuration);
-
+            serviceCollection.AddLogging();
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var socketStreamer = serviceProvider.GetRequiredService<IWebSocketStreamer>();
         }
     }
 }
