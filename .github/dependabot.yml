@@ -1,0 +1,24 @@
+version: 2
+registries:
+  nuget-example:
+    type: nuget-feed
+    url: https://nuget.pkg.github.com/trakx/index.json
+    username: trakx-bot
+    password: ${{secrets.TRAKX_BOT_READONLY_PAT}}
+
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  # Maintain dependencies for docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  # Maintain dependencies for Composer
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"

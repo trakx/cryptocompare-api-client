@@ -1,14 +1,13 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-using Trakx.CryptoCompare.ApiClient.Tests;
 using Trakx.CryptoCompare.ApiClient.Websocket.Extensions;
 using Trakx.CryptoCompare.ApiClient.Websocket.Model;
+using Trakx.Utils.Testing;
 using Trakx.Websocket;
 using Trakx.Websocket.Interfaces;
 using Trakx.Websocket.Model;
@@ -31,16 +30,17 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientWebsocketFactory, ClientWebsocketFactory>();
-            serviceCollection.AddSingleton(Options.Create(new WebsocketConfiguration
+            serviceCollection.AddSingleton(new WebsocketConfiguration
             {
                 BufferSize = 4096,
                 MaxSubscriptionsPerScope = 100
-            }));
-            serviceCollection.AddCryptoCompareWebsocketHandler(new CryptoCompareWebsocketConfiguration
-            {
-                Url = "wss://streamer.cryptocompare.com/v2?api_key=",
-                ApiKey = new Secrets().ApiKey
             });
+            var configuration = ConfigurationHelper.GetConfigurationFromEnv<CryptoCompareWebsocketConfiguration>()
+                with
+                {
+                    Url = "wss://streamer.cryptocompare.com/v2?api_key=",
+                };
+            serviceCollection.AddCryptoCompareWebsocketHandler(configuration);
             return serviceCollection.BuildServiceProvider();
         }
 
@@ -54,7 +54,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         {
             var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription
                 (SubscribeActions.SubAdd, subStr);
-           
+
             await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
             var res = await _cryptoCompareWebsocketHandler.GetTopicMessageStream<T>(topicSub.Topic)
                 .Buffer(TimeSpan.FromSeconds(10), 1)
@@ -71,7 +71,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"))
                 .ConfigureAwait(false);
             result!.Symbol.Should().Be("BTC");
-            decimal.Parse(result.Volume).Should().BeGreaterThan(0); 
+            decimal.Parse(result.Volume).Should().BeGreaterThan(0);
         }
 
         [Fact]

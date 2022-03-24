@@ -1,8 +1,7 @@
-﻿namespace Trakx.CryptoCompare.ApiClient.Websocket.Model
+﻿namespace Trakx.CryptoCompare.ApiClient.Websocket.Model;
+
+public enum SubscribeActions
 {
-    public enum SubscribeActions
-    {
-        SubAdd,
-        SubRemove
-    }
+    SubAdd,
+    SubRemove
 }

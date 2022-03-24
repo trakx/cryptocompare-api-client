@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{B4B8ECDB-63A4-431A-8313-2D90142033C1}"
 	ProjectSection(SolutionItems) = preProject
 		..\.all-contributorsrc = ..\.all-contributorsrc
-		..\.editorconfig = ..\.editorconfig
 		.env = .env
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
@@ -15,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
 		Common.Projects.props = Common.Projects.props
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
-		CryptoCompare.targets = CryptoCompare.targets
-		cryptocompare_logo.png = cryptocompare_logo.png
 		..\LICENSE = ..\LICENSE
 		Packable.Projects.props = Packable.Projects.props
 		package-icon.png = package-icon.png
@@ -24,6 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{6016A446-EAD5-451B-B8C0-EC13794036FB}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\dependabot.yml = ..\.github\dependabot.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C1DFC2BD-A633-4692-9196-EBF451A87AE0}"
 	ProjectSection(SolutionItems) = preProject
