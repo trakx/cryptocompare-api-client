@@ -14,10 +14,10 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket;
 
 public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<InboundMessageBase>, ICryptoCompareWebsocketHandler
 {
-    private readonly CryptoCompareWebsocketConfiguration _config;
+    private readonly CryptoCompareApiConfiguration _config;
 
     public CryptoCompareWebsocketHandler(WebsocketConfiguration websocketConfigurationOption,
-        CryptoCompareWebsocketConfiguration config,
+        CryptoCompareApiConfiguration config,
         IClientWebsocketFactory clientWebsocketFactory,
         TaskScheduler taskScheduler = null) : base(
         Options.Create(websocketConfigurationOption)
@@ -86,5 +86,5 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         return await base.AddInternalAsync(subscription);
     }
 
-    protected override Uri ClientSocketUri => new Uri(string.Concat(_config.Url, _config.ApiKey));
+    protected override Uri ClientSocketUri => _config.WebSocketEndpoint;
 }

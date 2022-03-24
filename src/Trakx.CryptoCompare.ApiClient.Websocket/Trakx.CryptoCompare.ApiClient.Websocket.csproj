@@ -12,4 +12,8 @@
 		<PackageReference Include="Trakx.Websocket" Version="0.2.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Trakx.CryptoCompare.ApiClient\Trakx.CryptoCompare.ApiClient.csproj" />
+	</ItemGroup>
+
 </Project>

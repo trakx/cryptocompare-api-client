@@ -9,7 +9,6 @@ on:
 env:
   SOLUTION_PATH: "src/Trakx.CryptoCompare.ApiClient.sln"
   CryptoCompareApiConfiguration__ApiKey: ${{secrets.CRYPTOCOMPARE_API_KEY}}
-  CryptoCompareWebsocketConfiguration__ApiKey: ${{secrets.CRYPTOCOMPARE_API_KEY}}
 
 jobs:
   build:

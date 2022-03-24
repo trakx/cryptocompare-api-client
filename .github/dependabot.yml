@@ -1,10 +1,13 @@
 version: 2
 registries:
-  nuget-example:
+  trakx-nuget:
     type: nuget-feed
     url: https://nuget.pkg.github.com/trakx/index.json
     username: trakx-bot
     password: ${{secrets.TRAKX_BOT_READONLY_PAT}}
+  official-nuget:
+    type: nuget-feed
+    url: https://api.nuget.org/v3/index.json
 
 updates:
   # Maintain dependencies for GitHub Actions
@@ -17,8 +20,11 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-  # Maintain dependencies for Composer
+  # Maintain dependencies for nuget
   - package-ecosystem: "nuget"
+    registries:
+      - "trakx-nuget"
+      - "official-nuget"
     directory: "/"
     schedule:
       interval: "daily"

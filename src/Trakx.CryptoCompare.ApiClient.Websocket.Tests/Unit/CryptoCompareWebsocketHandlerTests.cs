@@ -33,9 +33,9 @@ public class CryptoCompareWebsocketHandlerTests
         var fakeWebsocketFactory = Substitute.For<IClientWebsocketFactory>();
         fakeWebsocketFactory.CreateNewWebSocket(Arg.Any<Uri>(), Arg.Any<Action<WebsocketClient>>())
             .Returns(_testClient);
-        var fakeFinexConfig = new CryptoCompareWebsocketConfiguration
+        var fakeFinexConfig = new CryptoCompareApiConfiguration()
         {
-            Url = "https://www.google.com"
+            WebSocketBaseUrl = "https://www.google.com"
         };
 
         _websocketHandler = new CryptoCompareWebsocketHandler(fakeConfiguration, fakeFinexConfig, fakeWebsocketFactory);

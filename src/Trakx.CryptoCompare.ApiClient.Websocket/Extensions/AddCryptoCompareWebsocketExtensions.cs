@@ -2,9 +2,9 @@
 
 namespace Trakx.CryptoCompare.ApiClient.Websocket.Extensions;
 
-public static class ServiceCollectionExtensions
+public static class AddCryptoCompareWebsocketExtensions
 {
-    public static void AddCryptoCompareWebsocketHandler(this IServiceCollection services, CryptoCompareWebsocketConfiguration config)
+    public static void AddCryptoCompareWebsocketHandler(this IServiceCollection services, CryptoCompareApiConfiguration config)
     {
         services.AddSingleton<ICryptoCompareWebsocketHandler, CryptoCompareWebsocketHandler>();
         services.AddSingleton(config);
