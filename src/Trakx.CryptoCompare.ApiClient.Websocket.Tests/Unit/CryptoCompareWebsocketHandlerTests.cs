@@ -14,66 +14,65 @@ using Trakx.Websockets.Testing;
 using Websocket.Client;
 using Xunit;
 
-namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit
+namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit;
+
+public class CryptoCompareWebsocketHandlerTests
 {
-    public class CryptoCompareWebsocketHandlerTests
+    private readonly TestWebsocketClient _testClient;
+    private readonly CryptoCompareWebsocketHandler _websocketHandler;
+
+    public CryptoCompareWebsocketHandlerTests()
     {
-        private readonly TestWebsocketClient _testClient;
-        private readonly CryptoCompareWebsocketHandler _websocketHandler;
-
-        public CryptoCompareWebsocketHandlerTests()
+        _testClient = Substitute.ForPartsOf<TestWebsocketClient>();
+        var fakeConfiguration = new WebsocketConfiguration
         {
-            _testClient = Substitute.ForPartsOf<TestWebsocketClient>();
-            var fakeOptions = Substitute.For<IOptions<WebsocketConfiguration>>();
-            fakeOptions.Value.Returns(new WebsocketConfiguration
-            {
-                BufferSize = 4092,
-                MaxSubscriptionsPerScope = 100
-            });
+            BufferSize = 4092,
+            MaxSubscriptionsPerScope = 100
+        };
 
-            var fakeWebsocketFactory = Substitute.For<IClientWebsocketFactory>();
-            fakeWebsocketFactory.CreateNewWebSocket(Arg.Any<Uri>(), Arg.Any<Action<WebsocketClient>>()).Returns(_testClient);
-            var fakeFinexConfig = new CryptoCompareWebsocketConfiguration
-            {
-                Url = "https://www.google.com"
-            };
-
-            _websocketHandler = new CryptoCompareWebsocketHandler(fakeOptions, fakeFinexConfig, fakeWebsocketFactory);
-        }
-
-        [Fact]
-        public async Task AddAsync_should_remove_subscription_on_sub_remove()
+        var fakeWebsocketFactory = Substitute.For<IClientWebsocketFactory>();
+        fakeWebsocketFactory.CreateNewWebSocket(Arg.Any<Uri>(), Arg.Any<Action<WebsocketClient>>())
+            .Returns(_testClient);
+        var fakeFinexConfig = new CryptoCompareWebsocketConfiguration
         {
-            var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubAdd,
-                CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
-            var removeSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubRemove,
-                CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
-            await _websocketHandler.AddAsync(topicSub);
-            _websocketHandler.CurrentSubscriptions.Count.Should().Be(1);
-            await _websocketHandler.AddAsync(removeSub);
-            _websocketHandler.CurrentSubscriptions.Count.Should().Be(0);
-        }
+            Url = "https://www.google.com"
+        };
 
-        [Fact]
-        public async Task IncomingMessage_should_map_to_correct_observer()
-        {
-            var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubAdd,
-              CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
-            await _websocketHandler.AddAsync(topicSub);
+        _websocketHandler = new CryptoCompareWebsocketHandler(fakeConfiguration, fakeFinexConfig, fakeWebsocketFactory);
+    }
 
-            var topicMessageTask = _websocketHandler.GetTopicMessageStream<FullVolume>(topicSub.Topic).Buffer(TimeSpan.FromSeconds(5), 1)
-                .Select(t => t.FirstOrDefault())
-                .FirstOrDefaultAsync()
-                .ToTask();
-            var fullVolumeMsg = new FullVolume { Type = "11", Volume = 1, Symbol = "BTC" };
-            var fakeMsg = JsonSerializer.Serialize(fullVolumeMsg);
-            _testClient.StreamFakeMessage(ResponseMessage.TextMessage(fakeMsg));
+    [Fact]
+    public async Task AddAsync_should_remove_subscription_on_sub_remove()
+    {
+        var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubAdd,
+            CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
+        var removeSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubRemove,
+            CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
+        await _websocketHandler.AddAsync(topicSub);
+        _websocketHandler.CurrentSubscriptions.Count.Should().Be(1);
+        await _websocketHandler.AddAsync(removeSub);
+        _websocketHandler.CurrentSubscriptions.Count.Should().Be(0);
+    }
 
-            var topicMessage = await topicMessageTask;
-            topicMessage!.Type.Should().Be(fullVolumeMsg.Type);
-            topicMessage!.Symbol.Should().Be(fullVolumeMsg.Symbol);
-            topicMessage!.Volume.Should().Be(fullVolumeMsg.Volume);
+    [Fact]
+    public async Task IncomingMessage_should_map_to_correct_observer()
+    {
+        var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription(SubscribeActions.SubAdd,
+            CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test"));
+        await _websocketHandler.AddAsync(topicSub);
 
-        }
+        var topicMessageTask = _websocketHandler.GetTopicMessageStream<FullVolume>(topicSub.Topic)
+            .Buffer(TimeSpan.FromSeconds(5), 1)
+            .Select(t => t.FirstOrDefault())
+            .FirstOrDefaultAsync()
+            .ToTask();
+        var fullVolumeMsg = new FullVolume { Type = "11", Volume = 1, Symbol = "BTC" };
+        var fakeMsg = JsonSerializer.Serialize(fullVolumeMsg);
+        _testClient.StreamFakeMessage(ResponseMessage.TextMessage(fakeMsg));
+
+        var topicMessage = await topicMessageTask;
+        topicMessage!.Type.Should().Be(fullVolumeMsg.Type);
+        topicMessage!.Symbol.Should().Be(fullVolumeMsg.Symbol);
+        topicMessage!.Volume.Should().Be(fullVolumeMsg.Volume);
     }
 }

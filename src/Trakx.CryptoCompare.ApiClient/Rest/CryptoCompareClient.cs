@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.Rest.Clients;
 using Trakx.CryptoCompare.ApiClient.Rest.Core;
 using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
@@ -21,14 +20,14 @@ namespace Trakx.CryptoCompare.ApiClient.Rest
         /// </summary>
         /// <param name="httpClientHandler">Custom HTTP client handler. Can be used to define proxy settings.</param>
         /// <param name="apiConfiguration">Details of the Api Client configuration.</param>
-        public CryptoCompareClient(HttpClientHandler httpClientHandler, IOptions<CryptoCompareApiConfiguration> apiConfiguration)
+        public CryptoCompareClient(HttpClientHandler httpClientHandler, CryptoCompareApiConfiguration apiConfiguration)
         {
             Check.NotNull(httpClientHandler, nameof(httpClientHandler));
             this._httpClient = new HttpClient(httpClientHandler, true);
 
-            if (!string.IsNullOrWhiteSpace(apiConfiguration.Value.ApiKey))
+            if (!string.IsNullOrWhiteSpace(apiConfiguration.ApiKey))
             {
-                this.SetApiKey(apiConfiguration.Value.ApiKey);
+                this.SetApiKey(apiConfiguration.ApiKey);
             }
         }
 
@@ -36,11 +35,11 @@ namespace Trakx.CryptoCompare.ApiClient.Rest
         /// Initializes a new instance of the CryptoCompare.CryptoCompareClient class.
         /// </summary>
         /// <param name="apiConfiguration">Details of the Api Client configuration.</param>
-        public CryptoCompareClient(IOptions<CryptoCompareApiConfiguration> apiConfiguration)
+        public CryptoCompareClient(CryptoCompareApiConfiguration apiConfiguration)
             : this(
-                apiConfiguration.Value.ThrottleDelayMs <= 0 
-                    ? new HttpClientHandler() 
-                    : new ThottledHttpClientHandler(apiConfiguration.Value.ThrottleDelayMs),
+                apiConfiguration.ThrottleDelayMs <= 0
+                    ? new HttpClientHandler()
+                    : new ThottledHttpClientHandler(apiConfiguration.ThrottleDelayMs),
                 apiConfiguration)
         {
         }
@@ -121,7 +120,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest
                 this._httpClient.Dispose();
             }
         }
-        
+
         /// <inheritdoc />
         public void Dispose()
         {

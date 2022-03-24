@@ -45,6 +45,13 @@ paket add CryptoCompare
 In order to be able to run some integration tests, you should create a `.env` file in the `src` folder with the following variables:
 ```secretsEnvVariables
 CryptoCompareApiConfiguration__ApiKey=********
+CryptoCompareWebsocketConfiguration__ApiKey=********
+```
+
+## AWS Parameters
+In order to be able to run some integration tests you should ensure that you have access to the following AWS parameters :
+```awsParams
+/Trakx/CryptoCompare/ApiClient/Websocket/CryptoCompareWebsocketConfiguration/ApiKey
 ```
 
 ## Basic usage
