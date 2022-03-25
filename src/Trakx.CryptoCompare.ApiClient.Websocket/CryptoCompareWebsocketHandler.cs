@@ -20,7 +20,7 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         CryptoCompareApiConfiguration config,
         IClientWebsocketFactory clientWebsocketFactory,
         TaskScheduler taskScheduler = null) : base(
-        Options.Create(websocketConfigurationOption)
+        websocketConfigurationOption
         , clientWebsocketFactory, taskScheduler)
     {
         _config = config;
