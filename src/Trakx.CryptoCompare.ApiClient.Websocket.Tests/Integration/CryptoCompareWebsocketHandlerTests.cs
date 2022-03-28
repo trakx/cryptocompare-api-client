@@ -29,18 +29,15 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         public IServiceProvider CreateServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<IClientWebsocketFactory, ClientWebsocketFactory>();
-            serviceCollection.AddSingleton(new WebsocketConfiguration
+            var websocketConfiguration = new WebsocketConfiguration
             {
                 BufferSize = 4096,
                 MaxSubscriptionsPerScope = 100
-            });
+            };
             var configuration = ConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>()
-                with
-                {
-                    WebSocketBaseUrl = "wss://streamer.cryptocompare.com/v2?api_key=",
-                };
-            serviceCollection.AddCryptoCompareWebsocketHandler(configuration);
+                with { WebSocketBaseUrl = "wss://streamer.cryptocompare.com/v2?api_key=", };
+
+            serviceCollection.AddCryptoCompareWebsockets(configuration, websocketConfiguration);
             return serviceCollection.BuildServiceProvider();
         }
 
