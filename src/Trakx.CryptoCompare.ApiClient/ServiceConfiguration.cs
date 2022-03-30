@@ -10,26 +10,16 @@ namespace Trakx.CryptoCompare.ApiClient
         public static IServiceCollection AddCryptoCompareClient(
             this IServiceCollection services, CryptoCompareApiConfiguration configuration)
         {
-            var options = Options.Create(configuration);
-            services.AddSingleton(options);
-            AddCommonDependencies(services);
-
+            services.AddSingleton(configuration);
+            services.AddSingleton<ICryptoCompareClient, CryptoCompareClient>();
             return services;
         }
 
         public static IServiceCollection AddCryptoCompareClient(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOptions();
-            services.Configure<CryptoCompareApiConfiguration>(configuration.GetSection(nameof(CryptoCompareApiConfiguration)));
-
-            AddCommonDependencies(services);
-
-            return services;
-        }
-
-        private static void AddCommonDependencies(IServiceCollection services)
-        {
-            services.AddSingleton<ICryptoCompareClient, CryptoCompareClient>();
+            var apiConfiguration = configuration.GetSection(nameof(CryptoCompareApiConfiguration))
+                .Get<CryptoCompareApiConfiguration>();
+            return AddCryptoCompareClient(services, apiConfiguration);
         }
     }
 }
