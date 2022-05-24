@@ -8,8 +8,8 @@
 	<Import Project="../Packable.Projects.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Trakx.Utils" Version="0.3.13" />
-		<PackageReference Include="Trakx.Websocket" Version="0.2.1" />
+		<PackageReference Include="Trakx.Utils" Version="0.4.4" />
+		<PackageReference Include="Trakx.Websocket" Version="0.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>
