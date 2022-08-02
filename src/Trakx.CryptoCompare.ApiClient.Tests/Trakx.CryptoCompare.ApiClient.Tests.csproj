@@ -29,7 +29,7 @@
     <PackageReference Include="NSubstitute" Version="4.3.0" />
     <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.3" />
     <PackageReference Include="Trakx.Utils.Testing" Version="0.4.4" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
