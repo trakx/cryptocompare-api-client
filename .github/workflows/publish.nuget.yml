@@ -48,7 +48,7 @@ jobs:
           semverIncrementLevel: ${{github.event.inputs.semverIncrementLevel}}
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3.0.2
         with:
           dotnet-version: 6.0.x
 
