@@ -43,7 +43,7 @@ jobs:
 
       - name: Bump version
         id: bumpVersion
-        uses: trakx/bump-version-action/get-tag@v9.1.1
+        uses: trakx/bump-version-action/get-tag@v9.1.5
         with:
           semverIncrementLevel: ${{github.event.inputs.semverIncrementLevel}}
 
@@ -88,7 +88,7 @@ jobs:
 
       - name: Push version tag
         id: pushTag
-        uses: trakx/bump-version-action/push-tag@v9.1.1
+        uses: trakx/bump-version-action/push-tag@v9.1.5
         with:
           tag: v${{steps.bumpVersion.outputs.fullVersion}}
           githubToken: ${{secrets.GITHUB_TOKEN}}
