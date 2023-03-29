@@ -4,12 +4,12 @@ using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
-    public struct Sub : IEquatable<Sub>
+    public readonly struct Sub : IEquatable<Sub>
     {
         public bool Equals(Sub other) => string.Equals(this.Exchange, other.Exchange)
-                                            && string.Equals(this.FromSymbol, other.FromSymbol)
-                                            && this.SubId == other.SubId 
-                                            && string.Equals(this.ToSymbol, other.ToSymbol);
+                                            && string.Equals(this.BaseSymbol, other.BaseSymbol)
+                                            && this.SubId == other.SubId
+                                            && string.Equals(this.QuoteSymbol, other.QuoteSymbol);
 
         public override bool Equals(object obj)
         {
@@ -25,9 +25,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
             unchecked
             {
                 var hashCode = this.Exchange.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.FromSymbol.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.BaseSymbol.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int)this.SubId;
-                hashCode = (hashCode * 397) ^ this.ToSymbol.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.QuoteSymbol.GetHashCode();
                 return hashCode;
             }
         }
@@ -38,22 +38,22 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
             Check.NotNullOrWhiteSpace(fromSymbol, nameof(fromSymbol));
             Check.NotNullOrWhiteSpace(toSymbol, nameof(toSymbol));
             this.Exchange = exchange;
-            this.FromSymbol = fromSymbol;
+            this.BaseSymbol = fromSymbol;
             this.SubId = subId;
-            this.ToSymbol = toSymbol;
+            this.QuoteSymbol = toSymbol;
         }
 
         public string Exchange { get; }
 
-        public string FromSymbol { get; }
+        public string BaseSymbol { get; }
 
         public SubId SubId { get; }
 
-        public string ToSymbol { get; }
+        public string QuoteSymbol { get; }
 
         public override string ToString()
         {
-            return $"{this.SubId:D}~{this.Exchange}~{this.FromSymbol}~{this.ToSymbol}";
+            return $"{this.SubId:D}~{this.Exchange}~{this.BaseSymbol}~{this.QuoteSymbol}";
         }
     }
 }

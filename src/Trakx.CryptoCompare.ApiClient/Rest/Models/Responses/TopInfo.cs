@@ -5,9 +5,9 @@
 #nullable disable
         public string Exchange { get; set; }
 
-        public string FromSymbol { get; set; }
+        public string BaseSymbol { get; set; }
 
-        public string ToSymbol { get; set; }
+        public string QuoteSymbol { get; set; }
 
         public decimal Volume24H { get; set; }
 
