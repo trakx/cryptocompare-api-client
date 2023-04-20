@@ -1,0 +1,65 @@
+name: Publish Nuget Packages
+
+on:
+
+  # the workflow run allows to not run the test suite twice for non release
+  # branches, and should be used for all branches, but the reference branch
+  # in workflow run is the default branch and we don't get the correct release
+  # tags when it is triggered from release branches like stage and dev.
+  workflow_run:
+    workflows: ["Build and Test"]
+    types: [completed]
+    branches-ignore: [ stage, master ]
+
+  # so we treat these releases branches specially, using the push trigger directly.
+  push:
+    branches: [ stage, master ]
+
+  workflow_dispatch:
+    inputs:
+      semverIncrementLevel:
+        description: "Level of the semver (major.minor.patch) to be increased to get the new package version."
+        required: false
+        default: "patch"
+      debuggable:
+        description: "Set to false if you want a non debuggable (Release) package."
+        required: false
+        default: "true"
+
+jobs:
+
+  test:
+    uses: ./.github/workflows/test.yml
+    if: ${{ github.event_name != 'workflow_run' }}
+    secrets: inherit
+
+  publish:
+
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: |
+      always() && 
+        (needs.test.result == 'success' || (needs.test.result == 'skipped' 
+            && github.event_name == 'workflow_run' 
+            && github.event.workflow_run.conclusion == 'success' ))
+
+    steps:
+      - name: Default input values
+        id: default-inputs
+        run: |
+          debuggable="${{github.event.inputs.debuggable}}"
+          debuggable=${debuggable:-true}
+          echo '::set-output name=debuggable::'$debuggable
+          
+          semverIncrementLevel="${{github.event.inputs.semverIncrementLevel}}"
+          semverIncrementLevel=${semverIncrementLevel:-true}
+          echo '::set-output name=semverIncrementLevel::'$semverIncrementLevel
+
+      - name: Build and publish nuget packages
+        id: publish
+        uses: trakx/github-actions/publish-nuget@v10.0.9
+        with:
+          packageReadonlyPat: ${{secrets.TRAKX_BOT_READONLY_PAT}}
+          githubToken: ${{secrets.GITHUB_TOKEN}}
+          debuggable: ${{steps.default-inputs.outputs.debuggable}}
+          semverIncrementLevel: ${{steps.default-inputs.outputs.semverIncrementLevel}}
