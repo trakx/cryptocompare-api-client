@@ -67,7 +67,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"))
                 .ConfigureAwait(false);
             result!.Symbol.Should().Be("BTC");
-            decimal.Parse(result.Volume,CultureInfo.InvariantCulture).Should().BeGreaterThan(0);
+            decimal.TryParse(result.Volume, CultureInfo.InvariantCulture, out decimal volume);
+            volume.Should().BeGreaterThan(0);
         }
 
         [Fact]
