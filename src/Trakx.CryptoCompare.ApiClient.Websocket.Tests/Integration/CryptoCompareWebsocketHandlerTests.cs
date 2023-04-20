@@ -5,11 +5,9 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Trakx.Common.Testing.Configuration;
 using Trakx.CryptoCompare.ApiClient.Websocket.Extensions;
 using Trakx.CryptoCompare.ApiClient.Websocket.Model;
-using Trakx.Utils.Testing;
-using Trakx.Websocket;
-using Trakx.Websocket.Interfaces;
 using Trakx.Websocket.Model;
 using Xunit;
 
@@ -34,7 +32,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
                 BufferSize = 4096,
                 MaxSubscriptionsPerScope = 100
             };
-            var configuration = ConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>()
+            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>()
                 with { WebSocketBaseUrl = "wss://streamer.cryptocompare.com/v2?api_key=", };
 
             serviceCollection.AddCryptoCompareWebsockets(configuration, websocketConfiguration);
