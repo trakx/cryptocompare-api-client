@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Trakx.Common.Testing.Configuration;
 using Trakx.CryptoCompare.ApiClient.Rest;
-using Trakx.Utils.Testing;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
@@ -29,7 +29,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
         public ICryptoCompareClient CryptoCompareClient { get; }
         public CryptoCompareApiFixture()
         {
-            var configuration = ConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>();
+            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>();
             var services = new ServiceCollection();
             services.AddCryptoCompareClient(configuration);
             var provider = services.BuildServiceProvider();

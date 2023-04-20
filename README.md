@@ -47,11 +47,6 @@ In order to be able to run some integration tests, you should create a `.env` fi
 CryptoCompareApiConfiguration__ApiKey=********
 ```
 
-## AWS Parameters
-In order to be able to run some integration tests you should ensure that you have access to the following AWS parameters :
-```awsParams
-/Trakx/CryptoCompare/ApiClient/CryptoCompareApiConfiguration/ApiKey
-```
 
 ## Basic usage
 ````csharp
@@ -80,3 +75,9 @@ Console.WriteLine(eth.Data.General.Name);
 
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjoancaron%2Fcryptocompare-api.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjoancaron%2Fcryptocompare-api?ref=badge_large)
+
+## AWS Parameters
+In order to be able to run some integration tests, you should ensure that you have access to the AWS parameters starting in `/CiCd`. In order for the applications in this solution to run correctly on AWS, please ensure that variables starting in `/[environment]` are defined for all 3 environments \( _Production_, _Staging_, _Development_ \) :
+```awsParams
+/[environment]/Trakx/CryptoCompare/ApiClient/CryptoCompareApiConfiguration/ApiKey
+```
