@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Trakx.Utils.Serialization.Converters;
+using Trakx.Common.Serialization.Converters;
 
 namespace Trakx.CryptoCompare.ApiClient.Websocket.Model;
 

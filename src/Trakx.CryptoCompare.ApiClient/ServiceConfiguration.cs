@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Trakx.CryptoCompare.ApiClient.Rest;
 
 namespace Trakx.CryptoCompare.ApiClient
