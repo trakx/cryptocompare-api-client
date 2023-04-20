@@ -29,7 +29,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
         public ICryptoCompareClient CryptoCompareClient { get; }
         public CryptoCompareApiFixture()
         {
-            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>();
+            var configuration = AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>();
             var services = new ServiceCollection();
             services.AddCryptoCompareClient(configuration);
             var provider = services.BuildServiceProvider();

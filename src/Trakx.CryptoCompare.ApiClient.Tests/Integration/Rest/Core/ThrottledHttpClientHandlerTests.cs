@@ -15,8 +15,9 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
             var throttleDelayMs = 200;
             var queriesCount = 5;
 
-            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>()
-                with {
+            var configuration = AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>()
+                with
+            {
                 ThrottleDelayMs = throttleDelayMs
             };
             var client = new CryptoCompareClient(configuration);
