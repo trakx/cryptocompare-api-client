@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Trakx.Utils.Attributes;
+using Trakx.Common.Attributes;
 
 namespace Trakx.CryptoCompare.ApiClient
 {

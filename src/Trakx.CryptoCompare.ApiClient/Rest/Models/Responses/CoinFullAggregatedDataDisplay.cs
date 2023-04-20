@@ -18,7 +18,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public string ChangePCTDay { get; set; }
 
         [JsonProperty("FROMSYMBOL")]
-        public string FromSymbol { get; set; }
+        public string BaseSymbol { get; set; }
 
         [JsonProperty("HIGH24HOUR")]
         public string High24Hour { get; set; }
@@ -66,7 +66,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public string Supply { get; set; }
 
         [JsonProperty("TOSYMBOL")]
-        public string ToSymbol { get; set; }
+        public string QuoteSymbol { get; set; }
 
         [JsonProperty("TOTALVOLUME24H")]
         public string TotalVolume24H { get; set; }

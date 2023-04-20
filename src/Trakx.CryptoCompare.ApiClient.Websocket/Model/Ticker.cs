@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Trakx.Utils.Serialization.Converters;
+using Trakx.Common.Serialization.Converters;
 
 namespace Trakx.CryptoCompare.ApiClient.Websocket.Model;
 
@@ -7,8 +7,8 @@ public class Ticker : InboundMessageBase
 {
 #nullable disable
     [JsonPropertyName("MARKET")] public string Market { get; set; }
-    [JsonPropertyName("FROMSYMBOL")] public string FromSymbol { get; set; }
-    [JsonPropertyName("TOSYMBOL")] public string ToSymbol { get; set; }
+    [JsonPropertyName("FROMSYMBOL")] public string BaseSymbol { get; set; }
+    [JsonPropertyName("TOSYMBOL")] public string QuoteSymbol { get; set; }
 
     [JsonPropertyName("FLAGS"), JsonConverter(typeof(ULongOrStringConverter))]
     public ulong Flags { get; set; }
