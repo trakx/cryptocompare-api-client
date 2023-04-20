@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"))
                 .ConfigureAwait(false);
             result!.Symbol.Should().Be("BTC");
-            decimal.Parse(result.Volume).Should().BeGreaterThan(0);
+            decimal.Parse(result.Volume,CultureInfo.InvariantCulture).Should().BeGreaterThan(0);
         }
 
         [Fact]
