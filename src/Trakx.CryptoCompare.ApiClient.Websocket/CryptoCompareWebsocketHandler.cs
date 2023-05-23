@@ -26,6 +26,8 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         _config = config;
     }
 
+    protected override Uri ClientSocketUri => _config.WebSocketEndpoint;
+
     protected override IReadOnlyDictionary<string, Type> MessageTypesByTopics => new Dictionary<string, Type>
     {
         { "0", typeof(Trade) },
@@ -61,14 +63,14 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
 
     protected override async Task<bool> AddInternalAsync(TopicSubscription subscription)
     {
-        if (subscription.Topic.ContainsIgnoreCase(SubscribeActions.SubRemove.ToString()))
+        if (HasRemoveAction(subscription))
         {
-            return await RemovePrivateAsync(subscription);
+            return await RemoveAsync(subscription);
         }
         return await base.AddInternalAsync(subscription);
     }
 
-    private async Task<bool> RemovePrivateAsync(TopicSubscription subscription)
+    public async Task<bool> RemoveAsync(TopicSubscription subscription)
     {
         var payload = JsonSerializer.Deserialize<CryptoCompareSubscription>(subscription.Topic);
 
@@ -77,14 +79,22 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
 
         foreach (var item in payload.Subs)
         {
-            var toRemoveSubs = Subscriptions.Where(t => t.Topic.ContainsIgnoreCase(item));
-            if (!toRemoveSubs.Any()) continue;
-            await this.RemoveAsync(toRemoveSubs.ToList());
+            var toRemoveSubs = Subscriptions.Where(t => t.Topic.ContainsIgnoreCase(item)).ToList();
+            foreach (var unwanted in toRemoveSubs)
+            {
+                Subscriptions.Remove(unwanted);
+            }
         }
 
         SendClient(subscription.Topic);
+
+        await Task.CompletedTask;
         return true;
     }
 
-    protected override Uri ClientSocketUri => _config.WebSocketEndpoint;
+    private static bool HasRemoveAction(TopicSubscription subscription)
+    {
+        var remove = SubscribeActions.SubRemove.ToString();
+        return subscription.Topic.ContainsIgnoreCase(remove);
+    }
 }
