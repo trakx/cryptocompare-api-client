@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Serilog;
+using Trakx.Common.Extensions;
 using Trakx.CryptoCompare.ApiClient.Websocket.Model;
 using Trakx.Websocket;
 using Trakx.Websocket.Interfaces;
@@ -16,12 +16,12 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
 {
     private readonly CryptoCompareApiConfiguration _config;
 
-    public CryptoCompareWebsocketHandler(WebsocketConfiguration websocketConfigurationOption,
+    public CryptoCompareWebsocketHandler(
+        WebsocketConfiguration websocketConfigurationOption,
         CryptoCompareApiConfiguration config,
         IClientWebsocketFactory clientWebsocketFactory,
-        TaskScheduler taskScheduler = null) : base(
-        websocketConfigurationOption
-        , clientWebsocketFactory, taskScheduler)
+        TaskScheduler? taskScheduler = null)
+        : base(websocketConfigurationOption, clientWebsocketFactory, taskScheduler)
     {
         _config = config;
     }
@@ -48,7 +48,7 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
 
     protected override object? DeserializeClientSocketIncoming(string topic, IncomingMessage m)
     {
-        var typeStr = m.DeserializedMessage?.Type ?? null;
+        var typeStr = m.DeserializedMessage?.Type;
         if (typeStr != null && MessageTypesByTopics.ContainsKey(typeStr))
         {
             var type = MessageTypesByTopics[typeStr];
@@ -61,29 +61,29 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
 
     protected override async Task<bool> AddInternalAsync(TopicSubscription subscription)
     {
-        var jDoc = JsonDocument.Parse(subscription.Topic);
-        JsonProperty? unsubProperties = jDoc.RootElement.EnumerateObject().Any(t => t.Name.Equals("action", StringComparison.InvariantCultureIgnoreCase)
-            && t.Value.GetString().Equals("SubRemove", StringComparison.InvariantCultureIgnoreCase)) ?
-            jDoc.RootElement.EnumerateObject().FirstOrDefault(t => t.Name == "subs")
-            : null;
-        if (unsubProperties != null)
+        if (subscription.Topic.ContainsIgnoreCase(SubscribeActions.SubRemove.ToString()))
         {
-            var unsubArrayLength = unsubProperties.Value.Value.GetArrayLength();
-            for (int i = 0; i < unsubArrayLength; i++)
-            {
-                var unsubElement = unsubProperties.Value.Value[i].GetString();
-                var toRemoveSubs = Subscriptions.Where(t => t.Topic.Contains(unsubElement, StringComparison.InvariantCultureIgnoreCase))
-                    .ToList();
-                if (toRemoveSubs.Any())
-                {
-                    await this.RemoveAsync(toRemoveSubs);
-                }
-            }
-            SendClient(subscription.Topic);
-            return true;
+            return await RemovePrivateAsync(subscription);
+        }
+        return await base.AddInternalAsync(subscription);
+    }
+
+    private async Task<bool> RemovePrivateAsync(TopicSubscription subscription)
+    {
+        var payload = JsonSerializer.Deserialize<CryptoCompareSubscription>(subscription.Topic);
+
+        if (payload == null) return false;
+        if (payload.Action != SubscribeActions.SubRemove) return false;
+
+        foreach (var item in payload.Subs)
+        {
+            var toRemoveSubs = Subscriptions.Where(t => t.Topic.ContainsIgnoreCase(item));
+            if (!toRemoveSubs.Any()) continue;
+            await this.RemoveAsync(toRemoveSubs.ToList());
         }
 
-        return await base.AddInternalAsync(subscription);
+        SendClient(subscription.Topic);
+        return true;
     }
 
     protected override Uri ClientSocketUri => _config.WebSocketEndpoint;
