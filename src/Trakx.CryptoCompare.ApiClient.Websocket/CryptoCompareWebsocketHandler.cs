@@ -77,9 +77,9 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         if (payload == null) return false;
         if (payload.Action != SubscribeActions.SubRemove) return false;
 
-        foreach (var item in payload.Subs)
+        foreach (var payloadSub in payload.Subs)
         {
-            var toRemoveSubs = Subscriptions.Where(t => t.Topic.ContainsIgnoreCase(item)).ToList();
+            var toRemoveSubs = Subscriptions.Where(t => t.Topic.ContainsIgnoreCase(payloadSub)).ToList();
             foreach (var unwanted in toRemoveSubs)
             {
                 Subscriptions.Remove(unwanted);
@@ -92,9 +92,16 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         return true;
     }
 
+    /// <summary>
+    /// The <see cref="TopicSubscription.Topic"/> for <see cref="CryptoCompareWebsocketHandler"/>
+    /// has a payload of type <see cref="CryptoCompareSubscription"/>.
+    /// This method checks if the <see cref="CryptoCompareSubscription.Action"/> in the payload is <see cref="SubscribeActions.SubRemove"/>.
+    /// It's a fast string-based check, using the string representation of the enum.
+    /// The slower alternative would be parsing the JSON payload.
+    /// </summary>
     private static bool HasRemoveAction(TopicSubscription subscription)
     {
-        var remove = SubscribeActions.SubRemove.ToString();
-        return subscription.Topic.ContainsIgnoreCase(remove);
+        var subRemoveAsString = SubscribeActions.SubRemove.ToString();
+        return subscription.Topic.ContainsIgnoreCase(subRemoveAsString);
     }
 }

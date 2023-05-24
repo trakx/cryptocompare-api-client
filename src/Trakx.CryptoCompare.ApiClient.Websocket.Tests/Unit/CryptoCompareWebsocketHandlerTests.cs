@@ -17,6 +17,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Unit;
 
 public class CryptoCompareWebsocketHandlerTests
 {
+    private const string TestSymbol = "btc";
+
     private readonly TestWebsocketClient _testClient;
     private readonly CryptoCompareWebsocketHandler _websocketHandler;
     private readonly TopicSubscription _topicSub;
@@ -105,7 +107,7 @@ public class CryptoCompareWebsocketHandlerTests
             .Select(t => t.FirstOrDefault())
             .FirstOrDefaultAsync()
             .ToTask();
-        var fullVolumeMsg = new FullVolume { Type = "11", Volume = 1, Symbol = "BTC" };
+        var fullVolumeMsg = new FullVolume { Type = "11", Volume = 1, Symbol = TestSymbol };
         var fakeMsg = JsonSerializer.Serialize(fullVolumeMsg);
         _testClient.StreamFakeMessage(ResponseMessage.TextMessage(fakeMsg));
 
@@ -117,7 +119,7 @@ public class CryptoCompareWebsocketHandlerTests
 
     private static TopicSubscription SetupTopicSubscription(SubscribeActions action)
     {
-        var subscriptionString = CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("test");
+        var subscriptionString = CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr(TestSymbol);
         return CryptoCompareSubscriptionFactory.GetTopicSubscription(action, subscriptionString);
     }
 }
