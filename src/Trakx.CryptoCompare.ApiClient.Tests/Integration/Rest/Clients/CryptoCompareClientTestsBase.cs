@@ -29,11 +29,18 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
         public ICryptoCompareClient CryptoCompareClient { get; }
         public CryptoCompareApiFixture()
         {
-            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>();
+            CryptoCompareApiConfiguration configuration = LoadConfiguration();
+
             var services = new ServiceCollection();
             services.AddCryptoCompareClient(configuration);
             var provider = services.BuildServiceProvider();
             CryptoCompareClient = provider.GetRequiredService<ICryptoCompareClient>();
+        }
+
+        public static CryptoCompareApiConfiguration LoadConfiguration()
+        {
+            return AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>()
+                ?? throw new InvalidOperationException("Unable to load configuration from AWS");
         }
 
         protected virtual void Dispose(bool disposing)
