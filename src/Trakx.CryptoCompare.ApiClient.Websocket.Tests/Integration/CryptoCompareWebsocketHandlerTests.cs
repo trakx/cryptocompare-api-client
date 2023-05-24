@@ -46,14 +46,15 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         }
 
 
-        private async Task<T> GetResult<T>(string subStr) where T : InboundMessageBase
+        private async Task<T> GetResult<T>(string subStr, int bufferSeconds = 10)
+            where T : InboundMessageBase
         {
             var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription
                 (SubscribeActions.SubAdd, subStr);
 
             await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
             var res = await _cryptoCompareWebsocketHandler.GetTopicMessageStream<T>(topicSub.Topic)
-                .Buffer(TimeSpan.FromSeconds(10), 1)
+                .Buffer(TimeSpan.FromSeconds(bufferSeconds), 1)
                 .Select(t => t.FirstOrDefault())
                 .FirstOrDefaultAsync()
                 .ToTask();
@@ -76,11 +77,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         {
             var subscriptionString = CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt");
 
-            // when running tests, this call sometimes fails the first time
-            // so adding another attempt to see if this always passes
-            var result
-                 = await GetResult<TopOfOrderBook>(subscriptionString)
-                ?? await GetResult<TopOfOrderBook>(subscriptionString);
+            var result = await GetResult<TopOfOrderBook>(subscriptionString, bufferSeconds: 30);
 
             result.Should().NotBeNull();
             result!.Type.Should().Be("30");
