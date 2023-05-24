@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-using Trakx.Common.Testing.Configuration;
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients;
 using Trakx.CryptoCompare.ApiClient.Websocket.Extensions;
 using Trakx.CryptoCompare.ApiClient.Websocket.Model;
 using Trakx.Websocket.Model;
@@ -25,7 +25,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             _cryptoCompareWebsocketHandler = _serviceScope.ServiceProvider.GetRequiredService<ICryptoCompareWebsocketHandler>();
         }
 
-        public IServiceProvider CreateServiceProvider()
+        public static IServiceProvider CreateServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
             var websocketConfiguration = new WebsocketConfiguration
@@ -33,8 +33,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
                 BufferSize = 4096,
                 MaxSubscriptionsPerScope = 100
             };
-            var configuration = EnvConfigurationHelper.GetConfigurationFromEnv<CryptoCompareApiConfiguration>()
-                with { WebSocketBaseUrl = "wss://streamer.cryptocompare.com/v2?api_key=", };
+
+            var configuration = CryptoCompareApiFixture.LoadConfiguration();
 
             serviceCollection.AddCryptoCompareWebsockets(configuration, websocketConfiguration);
             return serviceCollection.BuildServiceProvider();
@@ -46,14 +46,15 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         }
 
 
-        private async Task<T> GetResult<T>(string subStr) where T : InboundMessageBase
+        private async Task<T> GetResult<T>(string subStr, int bufferSeconds = 10)
+            where T : InboundMessageBase
         {
             var topicSub = CryptoCompareSubscriptionFactory.GetTopicSubscription
                 (SubscribeActions.SubAdd, subStr);
 
             await _cryptoCompareWebsocketHandler.AddAsync(topicSub);
             var res = await _cryptoCompareWebsocketHandler.GetTopicMessageStream<T>(topicSub.Topic)
-                .Buffer(TimeSpan.FromSeconds(10), 1)
+                .Buffer(TimeSpan.FromSeconds(bufferSeconds), 1)
                 .Select(t => t.FirstOrDefault())
                 .FirstOrDefaultAsync()
                 .ToTask();
@@ -64,8 +65,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_full_top_tier_volume_subscriptions()
         {
-            var result = await GetResult<TopTierFullVolume>(CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc"))
-                .ConfigureAwait(false);
+            var subscriptionString = CryptoCompareSubscriptionFactory.GetFullTopTierVolumeSubscriptionStr("btc");
+            var result = await GetResult<TopTierFullVolume>(subscriptionString).ConfigureAwait(false);
             result!.Symbol.Should().Be("BTC");
             decimal.TryParse(result.Volume, CultureInfo.InvariantCulture, out decimal volume);
             volume.Should().BeGreaterThan(0);
@@ -74,16 +75,19 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
         [Fact]
         public async Task Should_be_able_to_get_oc_book()
         {
-            var result = await GetResult<TopOfOrderBook>(CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt"))
-                .ConfigureAwait(false);
+            var subscriptionString = CryptoCompareSubscriptionFactory.GetTopOfOrderBookSubscriptionStr("Binance", "btc", "usdt");
+
+            var result = await GetResult<TopOfOrderBook>(subscriptionString, bufferSeconds: 30);
+
+            result.Should().NotBeNull();
             result!.Type.Should().Be("30");
         }
 
         [Fact]
         public async Task Should_be_able_to_get_ohlcc_candles()
         {
-            var result = await GetResult<Ohlc>(CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt", "m"))
-                .ConfigureAwait(false);
+            var subscriptionString = CryptoCompareSubscriptionFactory.GetOHLCCandlesSubscriptionStr("Binance", "btc", "usdt", "m");
+            var result = await GetResult<Ohlc>(subscriptionString).ConfigureAwait(false);
             result!.Open.Should().BeGreaterThan(0);
             result!.LastTimeStamp.Should().BeGreaterThan(0);
             result!.Market.Should().NotBeNull();
