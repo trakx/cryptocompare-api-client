@@ -40,7 +40,6 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
         public static CryptoCompareApiConfiguration LoadConfiguration()
         {
             return AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>()
-                ?? AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>("Development")
                 ?? throw new InvalidOperationException("Unable to load configuration from AWS");
         }
 
