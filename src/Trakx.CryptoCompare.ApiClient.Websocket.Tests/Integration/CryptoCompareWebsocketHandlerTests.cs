@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-using Trakx.Common.Testing.Configuration;
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients;
 using Trakx.CryptoCompare.ApiClient.Websocket.Extensions;
 using Trakx.CryptoCompare.ApiClient.Websocket.Model;
 using Trakx.Websocket.Model;
@@ -25,7 +25,7 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
             _cryptoCompareWebsocketHandler = _serviceScope.ServiceProvider.GetRequiredService<ICryptoCompareWebsocketHandler>();
         }
 
-        public IServiceProvider CreateServiceProvider()
+        public static IServiceProvider CreateServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
             var websocketConfiguration = new WebsocketConfiguration
@@ -33,9 +33,8 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket.Tests.Integration
                 BufferSize = 4096,
                 MaxSubscriptionsPerScope = 100
             };
-            var configuration = AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>()
-                with
-            { WebSocketBaseUrl = "wss://streamer.cryptocompare.com/v2?api_key=", };
+
+            var configuration = CryptoCompareApiFixture.LoadConfiguration();
 
             serviceCollection.AddCryptoCompareWebsockets(configuration, websocketConfiguration);
             return serviceCollection.BuildServiceProvider();

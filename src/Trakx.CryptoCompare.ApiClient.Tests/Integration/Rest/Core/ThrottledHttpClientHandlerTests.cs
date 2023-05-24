@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Trakx.Common.Testing.Configuration;
 using Trakx.CryptoCompare.ApiClient.Rest;
+using Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
@@ -15,11 +15,12 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Core
             var throttleDelayMs = 200;
             var queriesCount = 5;
 
-            var configuration = AwsConfigurationHelper.GetConfigurationFromAws<CryptoCompareApiConfiguration>()
+            var configuration = CryptoCompareApiFixture.LoadConfiguration()
                 with
             {
                 ThrottleDelayMs = throttleDelayMs
             };
+
             var client = new CryptoCompareClient(configuration);
 
             var stopWatch = new Stopwatch();
