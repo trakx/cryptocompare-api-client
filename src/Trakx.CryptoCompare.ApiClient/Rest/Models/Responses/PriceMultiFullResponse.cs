@@ -5,9 +5,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
     public class PriceMultiFullResponse
     {
         [JsonProperty("DISPLAY")]
-        public PriceMultiFullDisplay Display { get; set; }
+        public PriceMultiFullDisplay? Display { get; set; }
 
         [JsonProperty("RAW")]
-        public PriceMultiFullRaw Raw { get; set; }
+        public PriceMultiFullRaw? Raw { get; set; }
     }
 }

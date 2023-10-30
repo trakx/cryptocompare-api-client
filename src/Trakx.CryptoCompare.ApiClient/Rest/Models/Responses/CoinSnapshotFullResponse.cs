@@ -2,6 +2,6 @@
 {
     public class CoinSnapshotFullResponse : BaseApiResponse
     {
-        public CoinSnapshotFullData Data { get; set; }
+        public CoinSnapshotFullData? Data { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         {
             Check.NotNull(httpClient, nameof(httpClient));
         }
-        
+
         /// <summary>
         /// Get the price of any cryptocurrency in any other currency that you need at a given timestamp.
         /// The price comes from the daily info - so it would be the price at the end of the day GMT based on the requested TS.
@@ -42,7 +42,6 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         {
             Check.NotNullOrWhiteSpace(fromSymbol, nameof(fromSymbol));
             Check.NotEmpty(toSymbols, nameof(toSymbols));
-            
 
             return await this.GetAsync<PriceHistoricalReponse>(
                        ApiUrls.PriceHistorical(
@@ -53,7 +52,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
                            calculationType,
                            tryConversion)).ConfigureAwait(false);
         }
-  
+
         /// <summary>
         /// Get open, high, low, close, volumefrom and volumeto from the daily historical data.
         /// The values are based on 00:00 GMT time.It uses BTC conversion if data is not available because the coin is not trading in the specified currency.
@@ -69,7 +68,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         public async Task<HistoryResponse> DailyAsync(
             string fromSymbol,
             string toSymbol,
-            int? limit = null,
+            int? limit,
             string? exchangeName = null,
             DateTimeOffset? toDate = null,
             bool? allData = null,

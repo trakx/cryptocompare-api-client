@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
@@ -13,7 +14,10 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddCryptoCompareClient(configuration);
             serviceCollection.AddLogging();
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var action = () => _ = serviceCollection.BuildServiceProvider();
+
+            action.Should().NotThrow();
         }
     }
 }

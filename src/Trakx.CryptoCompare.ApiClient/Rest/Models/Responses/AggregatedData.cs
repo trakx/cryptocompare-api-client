@@ -7,16 +7,16 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
     public class AggregatedData
     {
         [JsonProperty("FLAGS")]
-        public string Flags { get; set; }
+        public string? Flags { get; set; }
 
         [JsonProperty("FROMSYMBOL")]
-        public string BaseSymbol { get; set; }
+        public string? BaseSymbol { get; set; }
 
         [JsonProperty("HIGH24HOUR")]
         public double? High24Hour { get; set; }
 
         [JsonProperty("LASTTRADEID")]
-        public string LastTradeId { get; set; }
+        public string? LastTradeId { get; set; }
 
         [JsonConverter(typeof(UnixTimeConverter))]
         [JsonProperty("LASTUPDATE")]
@@ -32,7 +32,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public double? Low24Hour { get; set; }
 
         [JsonProperty("MARKET")]
-        public string Market { get; set; }
+        public string? Market { get; set; }
 
         [JsonProperty("OPEN24HOUR")]
         public double? Open24Hour { get; set; }
@@ -41,10 +41,10 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public double? Price { get; set; }
 
         [JsonProperty("TOSYMBOL")]
-        public string QuoteSymbol { get; set; }
+        public string? QuoteSymbol { get; set; }
 
         [JsonProperty("TYPE")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [JsonProperty("VOLUME24HOUR")]
         public double? Volume24Hour { get; set; }
