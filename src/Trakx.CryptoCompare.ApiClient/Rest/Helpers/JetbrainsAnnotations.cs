@@ -367,29 +367,29 @@ namespace JetBrains.Annotations
     internal sealed class UsedImplicitlyAttribute : Attribute
     {
         public UsedImplicitlyAttribute()
-            : this(ImplicitUseKind.Default, ImplicitUseTarget.Default)
+            : this(ImplicitUseKinds.Default, ImplicitUseTargets.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseKind useKindFlags)
-            : this(useKindFlags, ImplicitUseTarget.Default)
+        public UsedImplicitlyAttribute(ImplicitUseKinds useKindFlags)
+            : this(useKindFlags, ImplicitUseTargets.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseTarget targetFlags)
-            : this(ImplicitUseKind.Default, targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseTargets targetFlags)
+            : this(ImplicitUseKinds.Default, targetFlags)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseKind useKindFlags, ImplicitUseTarget targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseKinds useKindFlags, ImplicitUseTargets targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
-        public ImplicitUseTarget TargetFlags { get; private set; }
+        public ImplicitUseTargets TargetFlags { get; private set; }
 
-        public ImplicitUseKind UseKindFlags { get; private set; }
+        public ImplicitUseKinds UseKindFlags { get; private set; }
     }
 
     /// <summary>
@@ -400,35 +400,35 @@ namespace JetBrains.Annotations
     internal sealed class MeansImplicitUseAttribute : Attribute
     {
         public MeansImplicitUseAttribute()
-            : this(ImplicitUseKind.Default, ImplicitUseTarget.Default)
+            : this(ImplicitUseKinds.Default, ImplicitUseTargets.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseKind useKindFlags)
-            : this(useKindFlags, ImplicitUseTarget.Default)
+        public MeansImplicitUseAttribute(ImplicitUseKinds useKindFlags)
+            : this(useKindFlags, ImplicitUseTargets.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseTarget targetFlags)
-            : this(ImplicitUseKind.Default, targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseTargets targetFlags)
+            : this(ImplicitUseKinds.Default, targetFlags)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseKind useKindFlags, ImplicitUseTarget targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseKinds useKindFlags, ImplicitUseTargets targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
         [UsedImplicitly]
-        public ImplicitUseTarget TargetFlags { get; private set; }
+        public ImplicitUseTargets TargetFlags { get; private set; }
 
         [UsedImplicitly]
-        public ImplicitUseKind UseKindFlags { get; private set; }
+        public ImplicitUseKinds UseKindFlags { get; private set; }
     }
 
     [Flags]
-    internal enum ImplicitUseKind
+    internal enum ImplicitUseKinds
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
 
@@ -453,7 +453,7 @@ namespace JetBrains.Annotations
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
     [Flags]
-    internal enum ImplicitUseTarget
+    internal enum ImplicitUseTargets
     {
         Default = Itself,
 
@@ -470,7 +470,7 @@ namespace JetBrains.Annotations
     /// This attribute is intended to mark publicly available API
     /// which should not be removed and so is treated as used.
     /// </summary>
-    [MeansImplicitUse(ImplicitUseTarget.WithMembers)]
+    [MeansImplicitUse(ImplicitUseTargets.WithMembers)]
     internal sealed class PublicApiAttribute : Attribute
     {
         public PublicApiAttribute()
