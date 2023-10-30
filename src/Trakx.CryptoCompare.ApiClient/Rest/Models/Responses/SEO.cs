@@ -1,6 +1,6 @@
 ﻿namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
-    public class SEO
+    public class Seo
     {
         public string? BaseImageUrl { get; set; }
 

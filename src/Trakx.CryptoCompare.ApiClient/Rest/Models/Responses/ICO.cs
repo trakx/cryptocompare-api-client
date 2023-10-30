@@ -5,7 +5,7 @@ using Trakx.CryptoCompare.ApiClient.Rest.Converters;
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
-    public class ICO
+    public class Ico
     {
         public string Blog { get; set; }
 

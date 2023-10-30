@@ -9,9 +9,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
     {
         public CoinGeneralInfo? General { get; set; }
 
-        public ICO? ICO { get; set; }
+        public Ico? ICO { get; set; }
 
-        public SEO? SEO { get; set; }
+        public Seo? SEO { get; set; }
 
         public IReadOnlyList<string> StreamerDataRaw { get; set; } = ImmutableList<string>.Empty;
 
