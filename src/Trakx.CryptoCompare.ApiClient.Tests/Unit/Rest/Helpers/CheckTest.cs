@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
 using Xunit;
 
@@ -6,7 +7,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.Rest.Helpers
 {
     public class CheckTest
     {
-        public static string Blah = nameof(Blah);
+        internal const string Blah = nameof(Blah);
 
         /// <summary>
         /// NotNullOrWhiteSpace should not throw ArgumentNullException when string is not null.
@@ -27,7 +28,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.Rest.Helpers
         public void NotNullOrWhiteSpaceShouldThrowArgumentNullExceptionWhenStringIsNullOrEmptyOrWhitespace(string value)
         {
             var exception = Assert.Throws<ArgumentNullException>(() => Check.NotNullOrWhiteSpace(value, Blah));
-            Assert.Equal(exception.ParamName, Blah);
+            exception.ParamName.Should().Be(Blah);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.Rest.Helpers
         public void NotNullShouldThrowArgumentNullExceptionWhenObjectIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => Check.NotNull<int?>(null, Blah));
-            Assert.Equal(exception.ParamName, Blah);
+            exception.ParamName.Should().Be(Blah);
         }
     }
 }

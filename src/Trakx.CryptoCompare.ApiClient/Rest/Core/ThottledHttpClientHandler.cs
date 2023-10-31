@@ -24,14 +24,14 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
             this._semaphore = new SemaphoreSlim(1, 1);
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            Check.NotNull(requestMessage, nameof(requestMessage));
+            Check.NotNull(request, nameof(request));
 
             await this._semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                return await base.SendAsync(requestMessage, cancellationToken);
+                return await base.SendAsync(request, cancellationToken);
             }
             finally
             {

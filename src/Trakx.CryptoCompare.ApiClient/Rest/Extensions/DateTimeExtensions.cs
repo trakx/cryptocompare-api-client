@@ -1,10 +1,11 @@
 ﻿using System;
+using Trakx.Common.Extensions;
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
 {
     public static class DateTimeExtensions
     {
-        private static readonly DateTimeOffset epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        private static readonly DateTimeOffset epoch = (1970, 1, 1).ToDateTimeOffset();
 
         /// <summary>
         /// Convert a Unix tick to a <see cref="DateTimeOffset"/> with UTC offset

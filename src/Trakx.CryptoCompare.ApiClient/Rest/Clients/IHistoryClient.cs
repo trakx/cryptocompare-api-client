@@ -26,7 +26,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             string fromSymbol,
             IEnumerable<string> toSymbols,
             DateTimeOffset requestedDate,
-            IEnumerable<string> markets = null,
+            IEnumerable<string>? markets = null,
             CalculationType? calculationType = null,
             bool? tryConversion = null);
 
@@ -46,7 +46,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             [NotNull] string fromSymbol,
             [NotNull] string toSymbol,
             int? limit,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             bool? allData = null,
             int? aggregate = null,
@@ -68,7 +68,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             [NotNull] string fromSymbol,
             [NotNull] string toSymbol,
             int? limit = null,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             bool? allData = null,
             int? aggregate = null,
@@ -91,7 +91,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             [NotNull] string fromSymbol,
             [NotNull] string toSymbol,
             int? limit = null,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             bool? allData = null,
             int? aggregate = null,
@@ -114,7 +114,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         Task<HistoryDayAverageResponse> DayAveragePriceAsync(
             [NotNull] string fromSymbol,
             [NotNull] string toSymbol,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             CalculationType? avgType = null,
             int? utcHourDiff = null,
@@ -134,7 +134,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         /// </returns>
         Task<ExchangeHistoryResponse> ExchangeDailyAsync(
             [NotNull] string toSymbol,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             int? limit = null,
             int? aggregate = null,
@@ -154,7 +154,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         /// </returns>
         Task<ExchangeHistoryResponse> ExchangeHourlyAsync(
             [NotNull] string toSymbol,
-            string exchangeName = null,
+            string? exchangeName = null,
             DateTimeOffset? toDate = null,
             int? limit = null,
             int? aggregate = null,

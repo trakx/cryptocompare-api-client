@@ -12,22 +12,22 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
     {
         private const string RateLimitsUrl = "/stats/rate/{0}/limit";
 
-        public static readonly Uri MinApiEndpoint = new Uri(
+        public static readonly Uri MinApiEndpoint = new(
             "https://min-api.cryptocompare.com/data/",
             UriKind.Absolute);
 
-        public static readonly Uri SiteApiEndpoint = new Uri(
+        public static readonly Uri SiteApiEndpoint = new(
             "https://www.cryptocompare.com/api/data/",
             UriKind.Absolute);
 
-        public static Uri AllCoins() => new Uri(MinApiEndpoint, "all/coinlist");
+        public static Uri AllCoins() => new(MinApiEndpoint, "all/coinlist");
 
-        public static Uri AllExchanges() => new Uri(MinApiEndpoint, "all/exchanges");
+        public static Uri AllExchanges() => new(MinApiEndpoint, "all/exchanges");
 
         public static Uri DayAveragePrice(
             string fsym,
             string tsym,
-            string e,
+            string? e,
             DateTimeOffset? toTs,
             CalculationType? avgType,
             int? UTCHourDiff,
@@ -97,9 +97,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
                 });
         }
 
-        public static Uri MiningContracts() => new Uri(SiteApiEndpoint, "miningcontracts");
+        public static Uri MiningContracts() => new(SiteApiEndpoint, "miningcontracts");
 
-        public static Uri MiningEquipments() => new Uri(SiteApiEndpoint, "miningequipment");
+        public static Uri MiningEquipments() => new(SiteApiEndpoint, "miningequipment");
 
         public static Uri News(string? lang = null, long? lTs = null, string[]? feeds = null, bool? sign = null)
         {
@@ -141,7 +141,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
         public static Uri PriceHistorical(
             string fsym,
             IEnumerable<string> tsyms,
-            IEnumerable<string> markets,
+            IEnumerable<string>? markets,
             DateTimeOffset ts,
             CalculationType? calculationType,
             bool? tryConversion)
@@ -215,11 +215,11 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Core
                 });
         }
 
-        public static Uri RateLimitsByHour() => new Uri(MinApiEndpoint, string.Format(RateLimitsUrl, "hour"));
+        public static Uri RateLimitsByHour() => new(MinApiEndpoint, string.Format(RateLimitsUrl, "hour"));
 
-        public static Uri RateLimitsByMinute() => new Uri(MinApiEndpoint, string.Format(RateLimitsUrl, "minute"));
+        public static Uri RateLimitsByMinute() => new(MinApiEndpoint, string.Format(RateLimitsUrl, "minute"));
 
-        public static Uri RateLimitsBySecond() => new Uri(MinApiEndpoint, string.Format(RateLimitsUrl, "second"));
+        public static Uri RateLimitsBySecond() => new(MinApiEndpoint, string.Format(RateLimitsUrl, "second"));
 
         public static Uri SocialStats([NotNull] int id)
         {

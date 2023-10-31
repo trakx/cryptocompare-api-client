@@ -1,19 +1,19 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Trakx.CryptoCompare.ApiClient.Rest.Helpers;
 
 namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
     public readonly struct Sub : IEquatable<Sub>
     {
-        public bool Equals(Sub other) => string.Equals(this.Exchange, other.Exchange)
-                                            && string.Equals(this.BaseSymbol, other.BaseSymbol)
-                                            && this.SubId == other.SubId
-                                            && string.Equals(this.QuoteSymbol, other.QuoteSymbol);
+        public bool Equals(Sub other)
+            => string.Equals(this.Exchange, other.Exchange)
+            && string.Equals(this.BaseSymbol, other.BaseSymbol)
+            && this.SubId == other.SubId
+            && string.Equals(this.QuoteSymbol, other.QuoteSymbol);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -22,25 +22,18 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = this.Exchange.GetHashCode();
-                hashCode = (hashCode * 397) ^ this.BaseSymbol.GetHashCode();
-                hashCode = (hashCode * 397) ^ (int)this.SubId;
-                hashCode = (hashCode * 397) ^ this.QuoteSymbol.GetHashCode();
-                return hashCode;
-            }
+            return HashCode.Combine(Exchange, BaseSymbol, SubId, QuoteSymbol);
         }
 
-        public Sub([NotNull] string exchange, [NotNull] string fromSymbol, SubId subId, [NotNull] string toSymbol)
+        public Sub(string? exchange, string? fromSymbol, SubId subId, string? toSymbol)
         {
             Check.NotNullOrWhiteSpace(exchange, nameof(exchange));
             Check.NotNullOrWhiteSpace(fromSymbol, nameof(fromSymbol));
             Check.NotNullOrWhiteSpace(toSymbol, nameof(toSymbol));
-            this.Exchange = exchange;
-            this.BaseSymbol = fromSymbol;
+            this.Exchange = exchange!;
+            this.BaseSymbol = fromSymbol!;
             this.SubId = subId;
-            this.QuoteSymbol = toSymbol;
+            this.QuoteSymbol = toSymbol!;
         }
 
         public string Exchange { get; }
@@ -54,6 +47,16 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public override string ToString()
         {
             return $"{this.SubId:D}~{this.Exchange}~{this.BaseSymbol}~{this.QuoteSymbol}";
+        }
+
+        public static bool operator ==(Sub left, Sub right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Sub left, Sub right)
+        {
+            return !(left == right);
         }
     }
 }
