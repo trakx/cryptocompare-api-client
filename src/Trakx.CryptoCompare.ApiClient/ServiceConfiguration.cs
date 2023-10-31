@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Trakx.Common.Configuration;
 using Trakx.CryptoCompare.ApiClient.Rest;
 
 namespace Trakx.CryptoCompare.ApiClient
@@ -16,8 +17,7 @@ namespace Trakx.CryptoCompare.ApiClient
 
         public static IServiceCollection AddCryptoCompareClient(this IServiceCollection services, IConfiguration configuration)
         {
-            var apiConfiguration = configuration.GetSection(nameof(CryptoCompareApiConfiguration))
-                .Get<CryptoCompareApiConfiguration>();
+            var apiConfiguration = configuration.GetConfiguration<CryptoCompareApiConfiguration>();
             return AddCryptoCompareClient(services, apiConfiguration);
         }
     }

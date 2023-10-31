@@ -37,12 +37,12 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Converters
         public override object ReadJson(
             JsonReader reader,
             Type objectType,
-            object existingValue,
+            object? existingValue,
             JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.String)
             {
-                return this.GetTokenFromString(reader.Value.ToString());
+                return GetTokenFromString(reader.Value?.ToString());
             }
 
             if (reader.TokenType == JsonToken.StartArray)
@@ -50,11 +50,11 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Converters
                 var tokens = JArray.Load(reader);
                 if (tokens?.HasValues ?? false)
                 {
-                    return tokens.Values().Select(token => this.GetTokenFromString(token.ToString())).ToList();
+                    return tokens.Values().Select(token => GetTokenFromString(token.ToString())).ToList();
                 }
             }
 
-            return null;
+            return null!;
         }
 
         /// <summary>
@@ -64,13 +64,14 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Converters
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <seealso cref="M:Newtonsoft.Json.JsonConverter.WriteJson(JsonWriter,object,JsonSerializer)"/>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
-        private Sub GetTokenFromString(string token)
+        private static Sub GetTokenFromString(string? token)
         {
+            if (token == null) return default;
             var values = token.Split('~');
             if (values.Length == 4)
             {
@@ -81,7 +82,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Converters
                     subId,
                     values.ElementAtOrDefault(3));
             }
-            return default(Sub);
+            return default;
         }
     }
 }

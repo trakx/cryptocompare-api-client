@@ -33,7 +33,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
             var hasQueryString = uri.OriginalString.IndexOf("?", StringComparison.Ordinal);
 
             var uriWithoutQuery =
-                hasQueryString == -1 ? uri.ToString() : uri.OriginalString.Substring(0, hasQueryString);
+                hasQueryString == -1 ? uri.ToString() : uri.OriginalString[..hasQueryString];
 
             string queryString;
             if (uri.IsAbsoluteUri)
@@ -42,33 +42,33 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Extensions
             }
             else
             {
-                queryString = hasQueryString == -1 ? "" : uri.OriginalString.Substring(hasQueryString);
+                queryString = hasQueryString == -1 ? "" : uri.OriginalString[hasQueryString..];
             }
 
             var values = queryString.Replace("?", "").Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
 
             var existingParameters = values.ToDictionary(
-                key => key.Substring(0, key.IndexOf('=')),
-                value => value.Substring(value.IndexOf('=') + 1));
+                key => key[..key.IndexOf('=')],
+                value => value[(value.IndexOf('=') + 1)..]);
 
             foreach (var (k, v) in existingParameters)
             {
                 if (!p.ContainsKey(k))
                 {
-                    p.Add(k,v);
+                    p.Add(k, v);
                 }
             }
 
             var query = string.Join(
                 "&",
                 p.Where(param => !string.IsNullOrWhiteSpace(param.Value))
-                    .Select(kvp => kvp.Key + "=" + Uri.EscapeDataString(kvp.Value)));
+                    .Select(kvp => kvp.Key + "=" + Uri.EscapeDataString(kvp.Value!)));
             if (uri.IsAbsoluteUri)
             {
                 var uriBuilder = new UriBuilder(uri)
-                                 {
-                                     Query = query
-                                 };
+                {
+                    Query = query
+                };
                 return uriBuilder.Uri;
             }
 

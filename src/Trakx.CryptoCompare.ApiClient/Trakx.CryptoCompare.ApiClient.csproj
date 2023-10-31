@@ -10,8 +10,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Polly" Version="7.2.3" />
-    <PackageReference Include="Trakx.Common" Version="0.2.2" />
+    <PackageReference Include="Polly" Version="8.0.0" />
+    <PackageReference Include="Trakx.Common" Version="0.5.1" />
+    <PackageReference Include="Trakx.Common.Configuration" Version="0.5.1" />
   </ItemGroup>
 
 </Project>

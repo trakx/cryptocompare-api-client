@@ -1,19 +1,19 @@
 ﻿namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
 {
-    public class SEO
+    public class Seo
     {
-        public string BaseImageUrl { get; set; }
+        public string? BaseImageUrl { get; set; }
 
-        public string BaseUrl { get; set; }
+        public string? BaseUrl { get; set; }
 
         public int OgImageHeight { get; set; }
 
-        public string OgImageUrl { get; set; }
+        public string? OgImageUrl { get; set; }
 
         public int OgImageWidth { get; set; }
 
-        public string PageDescription { get; set; }
+        public string? PageDescription { get; set; }
 
-        public string PageTitle { get; set; }
+        public string? PageTitle { get; set; }
     }
 }

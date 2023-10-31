@@ -32,7 +32,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             IEnumerable<string> fromSymbols,
             IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null);
+            string? exchangeName = null);
 
         /// <summary>
         /// Get all the current trading info (price, vol, open, high, low etc) of any list of cryptocurrencies in any other currency that you need.
@@ -49,7 +49,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             IEnumerable<string> fromSymbols,
             IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null);
+            string? exchangeName = null);
 
         /// <summary>
         /// Get the current price of any cryptocurrency in any other currency that you need.
@@ -64,6 +64,6 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             string fromSymbol,
             IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null);
+            string? exchangeName = null);
     }
 }

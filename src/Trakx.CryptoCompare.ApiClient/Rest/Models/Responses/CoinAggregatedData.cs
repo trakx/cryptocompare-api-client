@@ -8,7 +8,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
         public double? HighDay { get; set; }
 
         [JsonProperty("LASTMARKET")]
-        public string LastMarket { get; set; }
+        public string? LastMarket { get; set; }
 
         [JsonProperty("LOWDAY")]
         public double? LowDay { get; set; }

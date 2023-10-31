@@ -23,7 +23,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Helpers
         [ContractAnnotation("value:null => halt")]
         public static IEnumerable<T> NotEmpty<T>(
             IEnumerable<T> value,
-            [InvokerParameterName] [NotNull] string parameterName)
+            [InvokerParameterName][NotNull] string parameterName)
         {
             NotNull(value, parameterName);
 
@@ -47,9 +47,9 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Helpers
         /// Checked object.
         /// </returns>
         [ContractAnnotation("value:null => halt")]
-        public static T NotNull<T>(T value, [InvokerParameterName] [NotNull] string parameterName)
+        public static T NotNull<T>(T value, [InvokerParameterName][NotNull] string parameterName)
         {
-            if (ReferenceEquals(value, null))
+            if (value is null)
             {
                 NotNullOrWhiteSpace(parameterName, nameof(parameterName));
                 throw new ArgumentNullException(parameterName);
@@ -67,7 +67,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Helpers
         /// Checked object.
         /// </returns>
         [ContractAnnotation("value:null => halt")]
-        public static string NotNullOrWhiteSpace(string value, [InvokerParameterName] [NotNull] string parameterName)
+        public static string NotNullOrWhiteSpace(string? value, [InvokerParameterName][NotNull] string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
