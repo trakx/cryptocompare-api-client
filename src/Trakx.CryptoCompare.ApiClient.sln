@@ -20,24 +20,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{6016A446-EAD5-451B-B8C0-EC13794036FB}"
-	ProjectSection(SolutionItems) = preProject
-		..\.github\dependabot.yml = ..\.github\dependabot.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C1DFC2BD-A633-4692-9196-EBF451A87AE0}"
-	ProjectSection(SolutionItems) = preProject
-		..\.github\workflows\dotnet-core.yml = ..\.github\workflows\dotnet-core.yml
-		..\.github\workflows\publish.nuget.yml = ..\.github\workflows\publish.nuget.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.CryptoCompare.ApiClient", "Trakx.CryptoCompare.ApiClient\Trakx.CryptoCompare.ApiClient.csproj", "{F43EBF54-E0AA-40D4-85AE-BBC8D06825AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.CryptoCompare.ApiClient.Tests", "Trakx.CryptoCompare.ApiClient.Tests\Trakx.CryptoCompare.ApiClient.Tests.csproj", "{D370556E-337B-4021-B954-71CE9AD1BCF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Websocket", "Trakx.CryptoCompare.ApiClient.Websocket\Trakx.CryptoCompare.ApiClient.Websocket.csproj", "{A0FD368B-F4F2-4E0D-87A2-4866900156CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.CryptoCompare.ApiClient.Websocket", "Trakx.CryptoCompare.ApiClient.Websocket\Trakx.CryptoCompare.ApiClient.Websocket.csproj", "{A0FD368B-F4F2-4E0D-87A2-4866900156CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Websocket.Tests", "Trakx.CryptoCompare.ApiClient.Websocket.Tests\Trakx.CryptoCompare.ApiClient.Websocket.Tests.csproj", "{4D9E5B67-4B53-4A40-BFFD-5FB07727E0EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trakx.CryptoCompare.ApiClient.Websocket.Tests", "Trakx.CryptoCompare.ApiClient.Websocket.Tests\Trakx.CryptoCompare.ApiClient.Websocket.Tests.csproj", "{4D9E5B67-4B53-4A40-BFFD-5FB07727E0EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C37319D5-EA5F-404D-8BB2-07902D8C1D72}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\automerge.yml = ..\.github\workflows\automerge.yml
+		..\.github\workflows\delete.packages.yml = ..\.github\workflows\delete.packages.yml
+		..\.github\workflows\nuget.yml = ..\.github\workflows\nuget.yml
+		..\.github\workflows\test.yml = ..\.github\workflows\test.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +61,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6016A446-EAD5-451B-B8C0-EC13794036FB} = {B4B8ECDB-63A4-431A-8313-2D90142033C1}
-		{C1DFC2BD-A633-4692-9196-EBF451A87AE0} = {6016A446-EAD5-451B-B8C0-EC13794036FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3F131DCD-33E4-47BA-8829-65E49F744112}
