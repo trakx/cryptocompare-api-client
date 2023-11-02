@@ -63,18 +63,17 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             {
                 var apiResponseObject = JsonConvert.DeserializeObject<TApiResponse>(jsonResponse);
 
-                var baseApiResponse = apiResponseObject as BaseApiResponse;
-                if (baseApiResponse != null && !baseApiResponse.IsSuccessfulResponse)
+                if (apiResponseObject is BaseApiResponse baseApiResponse && !baseApiResponse.IsSuccessfulResponse)
                 {
                     throw new CryptoCompareException(baseApiResponse);
                 }
 
-                return apiResponseObject;
+                return apiResponseObject!;
             }
             catch (JsonSerializationException jsonSerializationException)
             {
                 var apiErrorResponse = JsonConvert.DeserializeObject<BaseApiResponse>(jsonResponse);
-                throw new CryptoCompareException(apiErrorResponse, jsonSerializationException);
+                throw new CryptoCompareException(apiErrorResponse!, jsonSerializationException);
             }
         }
     }

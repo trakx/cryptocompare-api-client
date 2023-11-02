@@ -150,7 +150,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
             [NotNull] string fromSymbol,
             [NotNull] IEnumerable<string> toSymbols,
             bool? tryConversion = null,
-            string exchangeName = null)
+            string? exchangeName = null)
         {
             Check.NotNull(fromSymbol, nameof(fromSymbol));
             Check.NotEmpty(toSymbols, nameof(toSymbols));

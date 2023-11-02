@@ -22,7 +22,6 @@ SOFTWARE. */
 
 using System;
 
-#pragma warning disable 1591
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -134,7 +133,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string FormatParameterName { get; private set; }
+        public string? FormatParameterName { get; private set; }
     }
 
     /// <summary>
@@ -150,7 +149,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
     }
 
     /// <summary>
@@ -220,7 +219,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string ParameterName { get; private set; }
+        public string? ParameterName { get; private set; }
     }
 
     /// <summary>
@@ -281,7 +280,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Contract { get; private set; }
+        public string? Contract { get; private set; }
 
         public bool ForceFullStates { get; private set; }
     }
@@ -368,29 +367,29 @@ namespace JetBrains.Annotations
     internal sealed class UsedImplicitlyAttribute : Attribute
     {
         public UsedImplicitlyAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+            : this(ImplicitUseKinds.Default, ImplicitUseTargets.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        public UsedImplicitlyAttribute(ImplicitUseKinds useKindFlags)
+            : this(useKindFlags, ImplicitUseTargets.Default)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseTargets targetFlags)
+            : this(ImplicitUseKinds.Default, targetFlags)
         {
         }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseKinds useKindFlags, ImplicitUseTargets targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
-        public ImplicitUseTargetFlags TargetFlags { get; private set; }
+        public ImplicitUseTargets TargetFlags { get; private set; }
 
-        public ImplicitUseKindFlags UseKindFlags { get; private set; }
+        public ImplicitUseKinds UseKindFlags { get; private set; }
     }
 
     /// <summary>
@@ -401,35 +400,35 @@ namespace JetBrains.Annotations
     internal sealed class MeansImplicitUseAttribute : Attribute
     {
         public MeansImplicitUseAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+            : this(ImplicitUseKinds.Default, ImplicitUseTargets.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        public MeansImplicitUseAttribute(ImplicitUseKinds useKindFlags)
+            : this(useKindFlags, ImplicitUseTargets.Default)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseTargets targetFlags)
+            : this(ImplicitUseKinds.Default, targetFlags)
         {
         }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseKinds useKindFlags, ImplicitUseTargets targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
         [UsedImplicitly]
-        public ImplicitUseTargetFlags TargetFlags { get; private set; }
+        public ImplicitUseTargets TargetFlags { get; private set; }
 
         [UsedImplicitly]
-        public ImplicitUseKindFlags UseKindFlags { get; private set; }
+        public ImplicitUseKinds UseKindFlags { get; private set; }
     }
 
     [Flags]
-    internal enum ImplicitUseKindFlags
+    internal enum ImplicitUseKinds
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
 
@@ -454,7 +453,7 @@ namespace JetBrains.Annotations
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
     [Flags]
-    internal enum ImplicitUseTargetFlags
+    internal enum ImplicitUseTargets
     {
         Default = Itself,
 
@@ -471,20 +470,20 @@ namespace JetBrains.Annotations
     /// This attribute is intended to mark publicly available API
     /// which should not be removed and so is treated as used.
     /// </summary>
-    [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
-    internal sealed class PublicAPIAttribute : Attribute
+    [MeansImplicitUse(ImplicitUseTargets.WithMembers)]
+    internal sealed class PublicApiAttribute : Attribute
     {
-        public PublicAPIAttribute()
+        public PublicApiAttribute()
         {
         }
 
-        public PublicAPIAttribute([NotNull] string comment)
+        public PublicApiAttribute([NotNull] string comment)
         {
             Comment = comment;
         }
 
         [CanBeNull]
-        public string Comment { get; private set; }
+        public string? Comment { get; private set; }
     }
 
     /// <summary>
@@ -529,7 +528,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string Justification { get; private set; }
+        public string? Justification { get; private set; }
     }
 
     /// <summary>
@@ -572,7 +571,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string BasePath { get; private set; }
+        public string? BasePath { get; private set; }
     }
 
     /// <summary>
@@ -648,13 +647,13 @@ namespace JetBrains.Annotations
         /// Allows specifying a macro that will be executed for a <see cref="SourceTemplateAttribute">source template</see>
         /// parameter when the template is expanded.
         /// </summary>
-        public string Expression { get; set; }
+        public string? Expression { get; set; }
 
         /// <summary>
         /// Identifies the target parameter of a <see cref="SourceTemplateAttribute">source template</see> if the
         /// <see cref="MacroAttribute"/> is applied on a template method.
         /// </summary>
-        public string Target { get; set; }
+        public string? Target { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -666,7 +665,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Format { get; private set; }
+        public string? Format { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -678,7 +677,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Format { get; private set; }
+        public string? Format { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -690,7 +689,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Format { get; private set; }
+        public string? Format { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -713,7 +712,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Format { get; private set; }
+        public string? Format { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -725,7 +724,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Format { get; private set; }
+        public string? Format { get; private set; }
     }
 
     /// <summary>
@@ -747,7 +746,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string AnonymousProperty { get; private set; }
+        public string? AnonymousProperty { get; private set; }
     }
 
     /// <summary>
@@ -768,7 +767,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string AnonymousProperty { get; private set; }
+        public string? AnonymousProperty { get; private set; }
     }
 
     /// <summary>
@@ -790,7 +789,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string AnonymousProperty { get; private set; }
+        public string? AnonymousProperty { get; private set; }
     }
 
     /// <summary>
@@ -918,7 +917,7 @@ namespace JetBrains.Annotations
         }
 
         [CanBeNull]
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
@@ -930,7 +929,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
     }
 
     /// <summary>
@@ -1091,7 +1090,7 @@ namespace JetBrains.Annotations
         public Type ControlType { get; private set; }
 
         [NotNull]
-        public string TagName { get; private set; }
+        public string? TagName { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
@@ -1118,7 +1117,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Attribute { get; private set; }
+        public string? Attribute { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -1141,7 +1140,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -1154,10 +1153,10 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string FieldName { get; private set; }
+        public string? FieldName { get; private set; }
 
         [NotNull]
-        public string Type { get; private set; }
+        public string? Type { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -1169,7 +1168,7 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Directive { get; private set; }
+        public string? Directive { get; private set; }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -1204,7 +1203,7 @@ namespace JetBrains.Annotations
     /// The attribute must be mentioned in your member reordering patterns
     /// </remarks>
     [AttributeUsage(AttributeTargets.All)]
-    internal sealed class NoReorder : Attribute
+    internal sealed class NoReorderAttribute : Attribute
     {
     }
 }

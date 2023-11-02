@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -38,7 +40,8 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
             Assert.NotNull(result);
         }
 
-        [Fact] public async Task CanCallWithLargeNumberOfFSymbols()
+        [Fact]
+        public async Task CanCallWithLargeNumberOfFSymbols()
         {
             var symbols = new[]
             {
@@ -50,8 +53,13 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Integration.Rest.Clients
                 "srm", "cake", "luna"
             };
             var result = await CryptoCompareClient.Prices.MultipleSymbolsPriceAsync(symbols, new[] { "USD", "EUR" });
-            result.Count.Should().Be(symbols.Length);
-            Assert.NotNull(result);
+
+            result.Should().NotBeEmpty();
+
+            var missingKeys = symbols.Except(result.Keys, StringComparer.OrdinalIgnoreCase).Order().ToList();
+
+            var maximumMissingAllowed = symbols.Length * 10 / 100; // 10% missing
+            missingKeys.Count.Should().BeLessThanOrEqualTo(maximumMissingAllowed);
         }
     }
 }

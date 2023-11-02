@@ -16,12 +16,12 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Models.Responses
     public class SubList
     {
         [JsonConverter(typeof(StringToSubConverter))]
-        public IReadOnlyList<Sub> Current { get; set; }
+        public IReadOnlyList<Sub>? Current { get; set; }
 
         [JsonConverter(typeof(StringToSubConverter))]
-        public Sub CurrentAgg { get; set; }
+        public Sub? CurrentAgg { get; set; }
 
         [JsonConverter(typeof(StringToSubConverter))]
-        public IReadOnlyList<Sub> Trades { get; set; }
+        public IReadOnlyList<Sub>? Trades { get; set; }
     }
 }

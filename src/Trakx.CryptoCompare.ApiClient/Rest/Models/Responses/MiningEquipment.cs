@@ -2,8 +2,8 @@
 {
     public class MiningEquipment : MiningData
     {
-        public string EquipmentType { get; set; }
+        public string? EquipmentType { get; set; }
 
-        public string PowerConsumption { get; set; }
+        public string? PowerConsumption { get; set; }
     }
 }

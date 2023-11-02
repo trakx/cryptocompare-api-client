@@ -6,11 +6,11 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
 {
     public interface INewsClient
     {
-		/// <summary>
-		/// Return all news providers.
-		/// </summary>
-		/// <returns></returns>
-	    Task<IEnumerable<NewsProvider>> NewsProviders();
+        /// <summary>
+        /// Return all news providers.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<NewsProvider>> NewsProviders();
         /// <summary>
         /// Get all news 
         /// </summary>
@@ -19,7 +19,7 @@ namespace Trakx.CryptoCompare.ApiClient.Rest.Clients
         /// <param name="feeds">Feeds - for news</param>
         /// <param name="sign">if true cryptocompare will sign request</param>
         /// <returns></returns>
-        Task<IEnumerable<NewsEntity>> News(string lang = null, long? lTs = null, string[] feeds = null,
+        Task<IEnumerable<NewsEntity>> News(string? lang = null, long? lTs = null, string[]? feeds = null,
             bool? sign = null);
 
     }

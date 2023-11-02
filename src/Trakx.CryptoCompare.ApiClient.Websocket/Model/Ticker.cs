@@ -1,14 +1,13 @@
 ﻿using System.Text.Json.Serialization;
-using Trakx.Common.Serialization.Converters;
+using Trakx.Common.Serialization.Comparers;
 
 namespace Trakx.CryptoCompare.ApiClient.Websocket.Model;
 
 public class Ticker : InboundMessageBase
 {
-#nullable disable
-    [JsonPropertyName("MARKET")] public string Market { get; set; }
-    [JsonPropertyName("FROMSYMBOL")] public string BaseSymbol { get; set; }
-    [JsonPropertyName("TOSYMBOL")] public string QuoteSymbol { get; set; }
+    [JsonPropertyName("MARKET")] public string? Market { get; set; }
+    [JsonPropertyName("FROMSYMBOL")] public string? BaseSymbol { get; set; }
+    [JsonPropertyName("TOSYMBOL")] public string? QuoteSymbol { get; set; }
 
     [JsonPropertyName("FLAGS"), JsonConverter(typeof(ULongOrStringConverter))]
     public ulong Flags { get; set; }
@@ -33,5 +32,4 @@ public class Ticker : InboundMessageBase
     [JsonPropertyName("OPENHOUR")] public decimal? OpenHour { get; set; }
     [JsonPropertyName("HIGHHOUR")] public decimal? HighHour { get; set; }
     [JsonPropertyName("LOWHOUR")] public decimal? LowHour { get; set; }
-#nullable restore
 }
