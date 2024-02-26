@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
-
   <Import Project="../Common.Projects.props" />
   <Import Project="../Packable.Projects.props" />
 
   <ItemGroup>
-    <PackageReference Include="Trakx.Common" Version="0.5.1" />
-    <PackageReference Include="Trakx.Common.Configuration" Version="0.5.1" />
+    <PackageReference Include="Trakx.Common" Version="1.0.4" />
+    <PackageReference Include="Trakx.Common.Configuration" Version="1.0.4" />
     <PackageReference Include="Trakx.Websocket" Version="1.0.0" />
   </ItemGroup>
 
