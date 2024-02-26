@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A332677C-87E6-40B8-A4B2-64735A6F8C05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient", "src\Trakx.CryptoCompare.ApiClient\Trakx.CryptoCompare.ApiClient.csproj", "{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Websocket", "src\Trakx.CryptoCompare.ApiClient.Websocket\Trakx.CryptoCompare.ApiClient.Websocket.csproj", "{39B4B581-0097-4D49-A44C-FC491039764F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Tests", "src\Trakx.CryptoCompare.ApiClient.Tests\Trakx.CryptoCompare.ApiClient.Tests.csproj", "{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakx.CryptoCompare.ApiClient.Websocket.Tests", "src\Trakx.CryptoCompare.ApiClient.Websocket.Tests\Trakx.CryptoCompare.ApiClient.Websocket.Tests.csproj", "{6E06B703-57C9-414C-881B-13B1EEC6F886}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B4B581-0097-4D49-A44C-FC491039764F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B4B581-0097-4D49-A44C-FC491039764F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B4B581-0097-4D49-A44C-FC491039764F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B4B581-0097-4D49-A44C-FC491039764F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E06B703-57C9-414C-881B-13B1EEC6F886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E06B703-57C9-414C-881B-13B1EEC6F886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E06B703-57C9-414C-881B-13B1EEC6F886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E06B703-57C9-414C-881B-13B1EEC6F886}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1A6ECE4-AB2C-4A89-B5B1-18B4F7B93F17} = {A332677C-87E6-40B8-A4B2-64735A6F8C05}
+		{39B4B581-0097-4D49-A44C-FC491039764F} = {A332677C-87E6-40B8-A4B2-64735A6F8C05}
+		{9E3BB1CE-C5ED-422F-8BF6-149A2BD52AEC} = {A332677C-87E6-40B8-A4B2-64735A6F8C05}
+		{6E06B703-57C9-414C-881B-13B1EEC6F886} = {A332677C-87E6-40B8-A4B2-64735A6F8C05}
+	EndGlobalSection
+EndGlobal
