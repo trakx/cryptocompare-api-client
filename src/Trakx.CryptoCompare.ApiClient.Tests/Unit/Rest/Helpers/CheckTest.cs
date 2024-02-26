@@ -25,7 +25,7 @@ namespace Trakx.CryptoCompare.ApiClient.Tests.Unit.Rest.Helpers
         [InlineData(null)]
         [InlineData("")]
         [InlineData("  ")]
-        public void NotNullOrWhiteSpaceShouldThrowArgumentNullExceptionWhenStringIsNullOrEmptyOrWhitespace(string value)
+        public void NotNullOrWhiteSpaceShouldThrowArgumentNullExceptionWhenStringIsNullOrEmptyOrWhitespace(string? value)
         {
             var exception = Assert.Throws<ArgumentNullException>(() => Check.NotNullOrWhiteSpace(value, Blah));
             exception.ParamName.Should().Be(Blah);
