@@ -14,8 +14,6 @@ namespace Trakx.CryptoCompare.ApiClient.Websocket;
 
 public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<InboundMessageBase>, ICryptoCompareWebsocketHandler
 {
-    private readonly CryptoCompareApiConfiguration _config;
-
     public CryptoCompareWebsocketHandler(
         WebsocketConfiguration websocketConfigurationOption,
         CryptoCompareApiConfiguration config,
@@ -23,10 +21,8 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         TaskScheduler? taskScheduler = null)
         : base(websocketConfigurationOption, clientWebsocketFactory, taskScheduler)
     {
-        _config = config;
+        ServerUri = config.WebSocketEndpoint;
     }
-
-    protected override Uri ClientSocketUri => _config.WebSocketEndpoint;
 
     protected override IReadOnlyDictionary<string, Type> MessageTypesByTopics => new Dictionary<string, Type>
     {
@@ -48,7 +44,7 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
         { "401", typeof(Unauthorized) }
     };
 
-    protected override object? DeserializeClientSocketIncoming(string topic, IncomingMessage m)
+    protected override object? DeserializeMessageFromServer(string topic, IncomingMessage m)
     {
         var typeStr = m.DeserializedMessage?.Type;
         if (typeStr != null && MessageTypesByTopics.ContainsKey(typeStr))
@@ -86,7 +82,7 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
             }
         }
 
-        SendClient(subscription.Topic);
+        await SendMessageAsync(subscription.Topic);
 
         await Task.CompletedTask;
         return true;
@@ -101,7 +97,7 @@ public class CryptoCompareWebsocketHandler : ClientWebsocketRedirectHandlerBase<
     /// </summary>
     private static bool HasRemoveAction(TopicSubscription subscription)
     {
-        var subRemoveAsString = SubscribeActions.SubRemove.ToString();
+        const string subRemoveAsString = nameof(SubscribeActions.SubRemove);
         return subscription.Topic.ContainsIgnoreCase(subRemoveAsString);
     }
 }

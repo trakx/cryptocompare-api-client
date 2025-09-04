@@ -37,7 +37,7 @@ public class CryptoCompareWebsocketHandlerTests
         };
 
         var fakeWebsocketFactory = Substitute.For<IClientWebsocketFactory>();
-        fakeWebsocketFactory.CreateNewWebSocket(Arg.Any<Uri>(), Arg.Any<Action<WebsocketClient>>())
+        fakeWebsocketFactory.CreateNewWebSocket(Arg.Any<Uri>(), customiseWebsocketClient: Arg.Any<Action<WebsocketClient>>())
             .Returns(_testClient);
 
         var fakeFinexConfig = new CryptoCompareApiConfiguration()
