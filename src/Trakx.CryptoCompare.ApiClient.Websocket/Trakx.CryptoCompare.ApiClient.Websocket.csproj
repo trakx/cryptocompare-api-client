@@ -4,9 +4,9 @@
   <Import Project="../Packable.Projects.props" />
 
   <ItemGroup>
-    <PackageReference Include="Trakx.Common" Version="1.0.4" />
-    <PackageReference Include="Trakx.Common.Configuration" Version="1.0.4" />
-    <PackageReference Include="Trakx.Websocket" Version="1.0.0" />
+    <PackageReference Include="Trakx.Common" Version="1.7.5" />
+    <PackageReference Include="Trakx.Common.Configuration" Version="1.7.5" />
+    <PackageReference Include="Trakx.Websocket" Version="2.1.5" />
   </ItemGroup>
 
   <ItemGroup>
